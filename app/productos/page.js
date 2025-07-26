@@ -8,7 +8,7 @@ import Imprimidor from './Imprimidor'
 import { client } from '@/library/Typesense_client';
 
 //FUNCION BUSCADORA TYPESENSE
-async function searchCompanies() {  const searchParameters = {
+async function buscadoratypesense() {  const searchParameters = {
     q: 'stark',
     query_by: 'company_name',
     filter_by: '',
@@ -34,7 +34,7 @@ async function searchCompanies() {  const searchParameters = {
 
   async function page() {
 
-  var datos = await searchCompanies();
+  var datos = await buscadoratypesense();
 
    return (
      <div className="flex-grow bg-amber-100  p-4">

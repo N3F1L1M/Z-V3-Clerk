@@ -27,7 +27,7 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
   
 
   return (
-    <ClerkProvider localization={esMX}>
+    //<ClerkProvider localization={esMX}>
       <html lang="es">
         <body className="flex flex-wrap border-red-700 border-2">
 
@@ -46,6 +46,6 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
           
         </body>
       </html>
-    </ClerkProvider>
+   // </ClerkProvider>
   );
 }
