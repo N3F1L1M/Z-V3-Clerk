@@ -1,14 +1,12 @@
 import React from "react";
 
 //LIBRERIAS Y FUNCIONES IMPORTANTES
-
 import { type Metadata } from "next";
 import { ClerkProvider} from "@clerk/nextjs";
 import { esMX } from "@clerk/localizations";
 
 
 //COMPONETES Y DISEÑO
-
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";

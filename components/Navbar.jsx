@@ -20,7 +20,7 @@ const Navbar = () => {
           <li><a href="#" className="hover:text-gray-400">Inicio</a></li>
           <li><a href="#" className="hover:text-gray-400">Acerca</a></li>
           <li><a href="#" className="hover:text-gray-400">Contacto</a></li>
-          {/* <li> <UserButton /> </li> */}
+          <li> <UserButton /> </li> 
         </ul>
       </div>
     </nav>
