@@ -1,3 +1,5 @@
+//Clerk middleware esto permite bloquear las rutas y que no tengan acceso al menos que esten registrados 
+
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 
 const isPublicRoute = createRouteMatcher(['/sign-in(.*)', '/sign-up(.*)'])
