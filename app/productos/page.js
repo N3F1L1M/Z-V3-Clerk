@@ -1,49 +1,50 @@
 
 
-import React from 'react'
-import axios from 'axios'
-
 import Tablaproductos from "./Tablaproductos";
 import BotomAgregarProducto from "./BotomAgregarProducto";
+import Imprimidor from './Imprimidor'
 
 
+import { client } from '@/library/Typesense_client';
 
-async function pedidoraDeDatos() {
-  try {
-    const res = await axios({
-      url: "https://randomuser.me/api/",
-      method: "GET",
-    })
-    return res.data
-  } catch (err) {
-    console.log(err)
-    return null
-  }
-}
-
-
-
-
-
-async function page() {
-
-  const data = await pedidoraDeDatos()
-  console.log(data)
-  
-  return (
-
-    <div className="bg-gray-30 shadow-lg flex-grow">
-
-      
-  
-
-      <BotomAgregarProducto />
-
-      <Tablaproductos productos={data} />
+//FUNCION BUSCADORA TYPESENSE
+async function buscadoratypesense() {  const searchParameters = {
+    q: 'stark',
+    query_by: 'company_name',
+    filter_by: '',
+    sort_by: '_text_match:desc'  };
  
+  try { const results = await client
+      .collections('companies')
+      .documents()
+      .search(searchParameters);
 
-    </div>
-  );
-}
+      return results; // Aquí accedes a los resultados
 
-export default page
+  } catch (error) { return ('Error al buscar:', error);}}
+//FUNCION BUSCADORA TYPESENSE
+  
+
+
+
+
+
+
+
+
+  async function page() {
+
+  var datos = await buscadoratypesense();
+
+   return (
+     <div className="flex-grow bg-amber-100  p-4">
+
+
+      <Imprimidor datos={datos.hits} />
+       <BotomAgregarProducto />
+       <Tablaproductos />
+     </div>
+   );
+ }
+
+ export default page;
