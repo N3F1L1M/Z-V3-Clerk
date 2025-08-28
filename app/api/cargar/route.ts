@@ -1,6 +1,8 @@
+import { NextRequest, NextResponse } from "next/server";
+
 import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 import sharp from "sharp";
 
 
@@ -27,6 +29,10 @@ let cont = 0; //Variable para contar el ciclo para determinar que imagen lleva e
 
 //FUNCION POST 
 export async function POST(req: NextRequest) {
+
+     const { userId, sessionId } = await auth();
+
+     
 
     try {
         //Se obtienen las imagenes enviadas en el formulario
