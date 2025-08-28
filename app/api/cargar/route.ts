@@ -3,24 +3,31 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
 
-const { S3Client } = require("@aws-sdk/client-s3");
 
+
+//SE INICIA EL CLIENTE DE AWS
+const { S3Client } = require("@aws-sdk/client-s3");
 //Se asignan variables en base a los valores del .env
 const s3Client = new S3Client({
     region: process.env.AWS_BUCKET_REGION,
     credentials: {
         accessKeyId: process.env.AWS_ACCESS_KEY,
-        secretAccessKey: process.env.AWS_SECRET_KEY
-    },
-});
+        secretAccessKey: process.env.AWS_SECRET_KEY},});
 
-//Variable para contar el ciclo para determinar que imagen lleva el prefijo de portada
-let cont = 0;
+const bucket = process.env.AWS_BUCKET_NAME;//se selecciona el bucket
 
-const bucket = process.env.AWS_BUCKET_NAME;
 
-//Funcion para recibir la peticion POST enviada desde el formulario
+
+
+
+
+
+let cont = 0; //Variable para contar el ciclo para determinar que imagen lleva el prefijo de portada
+
+
+//FUNCION POST 
 export async function POST(req: NextRequest) {
+
     try {
         //Se obtienen las imagenes enviadas en el formulario
         const formData = await req.formData();
@@ -35,8 +42,7 @@ export async function POST(req: NextRequest) {
             });
         }
 
-        //Variable para almacenar el arreglo de urls de las imagenes cargadas
-        const urls: string[] = [];
+        const urls: string[] = [];//Variable para almacenar el arreglo de urls de las imagenes cargadas
 
         for (const image of images) {
             //Buffers para el manejo de imagenes

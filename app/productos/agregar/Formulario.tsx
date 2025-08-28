@@ -23,8 +23,6 @@ export default function formulario() {
       
      
 
-
-
   const submit = async (e: FormEvent<HTMLFormElement>) => {//maneja el boton de submit 
     e.preventDefault();
     console.log(selectedImages);
@@ -41,7 +39,7 @@ export default function formulario() {
 
         //se envia los datos que se agregaron al formulario a la ruta de api/s3
         //Para que la peticion acepte imagenes y no texto, especificamos que el contentType sea multipart/form-data
-        const { data } = await axios.post("/api/s3", formData, {
+        const { data } = await axios.post("/api/cargar", formData, {
           headers: {"Content-Type": "multipart/form-data",},});
 
         setCharge("Enviando a Bucket...");
@@ -91,7 +89,6 @@ export default function formulario() {
 
 
 
-
           {/* Elemento que muestra visualmente las imagenes que se han agregado al formulario */}
           {selectedImages.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-2">
@@ -121,7 +118,7 @@ export default function formulario() {
           className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded">
           Cargar Producto </button>
           
-        <input type="reset"placeholder="Reset"
+        <input type="reset" placeholder="Reset"
           className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded"/>
         
       </form>
