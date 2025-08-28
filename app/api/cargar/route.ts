@@ -5,6 +5,8 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { auth } from "@clerk/nextjs/server";
 import sharp from "sharp";
 
+import cargartexto from "./Texto";
+
 
 
 //SE INICIA EL CLIENTE DE AWS
@@ -31,12 +33,13 @@ let cont = 0; //Variable para contar el ciclo para determinar que imagen lleva e
 export async function POST(req: NextRequest) {
 
      const { userId, sessionId } = await auth();
+     const formData = await req.formData();
 
-     
+     cargartexto(formData);
 
     try {
         //Se obtienen las imagenes enviadas en el formulario
-        const formData = await req.formData();
+        
         const images = formData.getAll("images") as File[];
 
         //Condicional para retornar mensaje en caso de que no se envien imagenes

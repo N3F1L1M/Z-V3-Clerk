@@ -63,17 +63,18 @@ export default function formulario() {
   return (
 
     <div className="max-w-md mx-auto p-6 bg-gray-100 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4 text-center">Añadir Producto</h2>
-      {/* {if (images){
-        <h2>Se han cargado las imagenes exitosamente</h2>
-      }} */}
-
+      <h2 className="text-2xl font-bold mb-4 text-center">
+        Añadir Producto</h2>
+     
 
       <form className="space-y-4" onSubmit={submit}>
 
-        <input type="text" placeholder="Título del producto"
+
+        <label className="block mb-1 font-medium">Titulo</label>
+        <input type="text" placeholder="usado para la busqueda"
           className="w-full p-2 border rounded"/>
 
+        <label className="block mb-1 font-medium">Precio</label>
         <input type="number" step="0.01" placeholder="0.0"
           className="w-full p-2 border rounded"/>
 
