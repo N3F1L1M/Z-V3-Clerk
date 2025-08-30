@@ -3,9 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { auth } from "@clerk/nextjs/server";
+import { nanoid } from "nanoid";
 import sharp from "sharp";
 
-import cargartexto from "./Texto";
+import Textocharger from "./Textocharger";
+
+
+
 
 
 
@@ -21,37 +25,77 @@ const s3Client = new S3Client({
 const bucket = process.env.AWS_BUCKET_NAME;//se selecciona el bucket
 
 
-
-
-
-
-
 let cont = 0; //Variable para contar el ciclo para determinar que imagen lleva el prefijo de portada
+
+
+
+
+
 
 
 //FUNCION POST 
 export async function POST(req: NextRequest) {
 
-     const { userId, sessionId } = await auth();
+    //se carga los datos del formulario y de sesion 
      const formData = await req.formData();
+     const { userId, sessionId } = await auth();
 
-        console.log(userId);
-
-      await cargartexto(formData);
 
     try {
-        //Se obtienen las imagenes enviadas en el formulario
-        
+
+
+        //REVISION DE DATOS
+
+        //se revisa que el usuario este loggeado
+        if (!userId) {
+            return NextResponse.json({
+                message: "No autorizado. Debes iniciar sesión."
+            }, { status: 401 });
+        }
+
+          //Se obtienen las imagenes enviadas en el formulario
         const images = formData.getAll("images") as File[];
 
         //Condicional para retornar mensaje en caso de que no se envien imagenes
-        if (!images || images.length === 0) {
+                if (!images || images.length === 0) {
+                    return NextResponse.json({
+                        success: false,
+                        message: "No images received",
+                        data: null,
+                    });
+                }
+
+
+
+
+
+
+
+
+        //SE EMPIEZA A CARGAR EL PRODUCTO 
+
+
+        const idproducto = nanoid(); //se genera una ID para el producto
+
+
+
+
+
+        //Se llama a la funcion para cargar el texto en Typesense
+         const result = await Textocharger(formData, idproducto, userId);
+
+        //Se revisa si la carga fue exitosa
+        if (!result.success) {
             return NextResponse.json({
                 success: false,
-                message: "No images received",
-                data: null,
-            });
+                message: result.message
+            }, { status: 400 });
         }
+
+
+      
+
+      
 
         const urls: string[] = [];//Variable para almacenar el arreglo de urls de las imagenes cargadas
 
