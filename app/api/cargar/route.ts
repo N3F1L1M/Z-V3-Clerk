@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
 
 
 
-
+                /*
 
         //Se llama a la funcion para cargar el texto en Typesense
          const result = await Textocharger(formData, idproducto, userId);
@@ -92,7 +92,7 @@ export async function POST(req: NextRequest) {
             }, { status: 400 });
         }
 
-
+            */
       
 
       
@@ -103,12 +103,9 @@ export async function POST(req: NextRequest) {
             //Buffers para el manejo de imagenes
             const arrayBuffer = await image.arrayBuffer();
             const inputBuffer = Buffer.from(arrayBuffer);
-            //Este es el nombre de la imagen
-            let outputkey;
 
-            //Esta condicional valida si en el ciclo se esta manejando la primera imagen, si es el caso, se concatena el prefijo Portada al nombre de la imagen, y se cambia la extension a webp
-            // De lo contrario, solo se cambia la extension
-            cont === 0 ? outputkey = "Portada"+ image.name.replace(/\.\w+$/, ".webp") : outputkey = image.name.replace(/\.\w+$/, ".webp")
+            //Este es el nombre de la imagen
+            const outputkey = `${userId}/productos/${idproducto}/img-${cont}.webp`;
 
             //Este es el manejo del cambio de tamaño de la image a 1:1, junto con la compresion webp para que ocupe menos tamaño
             const resizedBuffer = await sharp(inputBuffer)
