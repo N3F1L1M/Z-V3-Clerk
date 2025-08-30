@@ -25,7 +25,6 @@ export default function formulario() {
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {//maneja el boton de submit 
     e.preventDefault();
-    console.log(selectedImages);
 
     try {//Se verifica que el campo de imagenes tenga al menos 1 imagen
       if (selectedImages.length > 0) {
@@ -36,6 +35,13 @@ export default function formulario() {
         selectedImages.forEach((image) => {
           formData.append("images", image); 
         });
+
+        //se agregan los campos de texto al formulario
+        formData.append("titulo", e.currentTarget.titulo.value);
+        formData.append("precio", e.currentTarget.precio.value);
+        formData.append("detalles", e.currentTarget.detalles.value);
+        formData.append("descripcion", e.currentTarget.descripcion.value);
+    
 
         //se envia los datos que se agregaron al formulario a la ruta de api/s3
         //Para que la peticion acepte imagenes y no texto, especificamos que el contentType sea multipart/form-data
@@ -71,11 +77,11 @@ export default function formulario() {
 
 
         <label className="block mb-1 font-medium">Titulo</label>
-        <input type="text" placeholder="usado para la busqueda"
+        <input type="text" placeholder="usado para la busqueda" name="titulo"
           className="w-full p-2 border rounded"/>
 
         <label className="block mb-1 font-medium">Precio</label>
-        <input type="number" step="0.01" placeholder="0.0"
+        <input type="number" step="0.01" placeholder="0.0" name="precio" 
           className="w-full p-2 border rounded"/>
 
 
@@ -108,10 +114,10 @@ export default function formulario() {
 
 
 
-        <input type="text" placeholder="Detalles"
+        <input type="text" placeholder="Detalles" name="detalles"
           className="w-full p-2 border rounded"/>
 
-        <textarea placeholder="Descripción"
+        <textarea placeholder="Descripción" name="descripcion"
           className="w-full p-2 border rounded resize-none"/>
         
 
