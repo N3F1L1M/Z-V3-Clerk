@@ -35,7 +35,9 @@ export async function POST(req: NextRequest) {
      const { userId, sessionId } = await auth();
      const formData = await req.formData();
 
-     cargartexto(formData);
+        console.log(userId);
+
+      await cargartexto(formData);
 
     try {
         //Se obtienen las imagenes enviadas en el formulario

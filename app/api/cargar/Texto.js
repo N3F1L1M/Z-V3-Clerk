@@ -1,12 +1,14 @@
-import React from 'react'
 
+import { client } from '@/library/Typesense_client';
 
-
-export default function cargartexto(userId) {
+export default async function cargartexto(userId) {
     
-console.log("prueba desde dentro del return");
-         console.log(userId);
+  let document = {
+  'titulo': 'prueba desde backend',
+  'precio': 12.50
+  }
 
-  return console.log("prueba desde dentro del return");
+client.collections('productos').documents().create(document)
+
 
 }
