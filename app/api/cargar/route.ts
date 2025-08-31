@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { auth } from "@clerk/nextjs/server";
 import { nanoid } from "nanoid";
 import sharp from "sharp";
@@ -109,30 +108,14 @@ export async function POST(req: NextRequest) {
             //Se crea la URL Cloudfront de la imagen cargada
             const cloudfrontUrl = `${process.env.AWS_CLOUDFRONT_DOMAIN}/${outputkey}`;
             imgUrls.push(cloudfrontUrl);
-            cont = cont + 1;
-
-
-
-
-            /*
-            //Esta parte utilizando el getObject es para traer la imagen una vez cargada
-            const getObjectParams = {
-                Bucket: bucket,
-                Key: outputkey,
-            };
-
-            const getCommand = new GetObjectCommand(getObjectParams);
-
-            //En conjunto con el getObject, se utiliza el getSignedUrl para generar la url para poder ver la imagen
-            const url = await getSignedUrl(s3Client, getCommand, {
-                expiresIn: 50000,
-            });
-                        */
-            
+            cont = cont + 1;   
         }
 
 
 
+
+
+        
        //Se llama a la funcion para cargar el texto en Typesense
          const result = await Textocharger(formData, idproducto, userId, imgUrls);
 
