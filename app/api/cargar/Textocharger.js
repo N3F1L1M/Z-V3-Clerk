@@ -2,18 +2,21 @@
 import { client } from '@/library/Typesense_client';
 
 
-export default async function Textocharger(formdata, idproducto, userId) {
+
+export default async function Textocharger(formdata, idproducto, userId, imgUrls) {
 
 
   console.log(formdata.get("precio"));
 
   let document = {
-  'id': idproducto,
+  
   'titulo': formdata.get("titulo"),
   'precio': parseFloat(formdata.get("precio")),
   'detalles': formdata.get("detalles"),
   'descripcion': formdata.get("descripcion"),
-  
+  'imagenes': imgUrls,
+  'id_tienda': userId,
+  'id': idproducto
   }
 
 

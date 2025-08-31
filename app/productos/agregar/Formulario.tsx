@@ -48,11 +48,7 @@ export default function formulario() {
         setCharge("Enviando a Bucket...");
 
         //Condicional para validar que la peticion fue exitosa
-        if (data.success && Array.isArray(data.data.urls)) {
-          setImages(data.data.urls);
-          console.log(images);
-          console.log(data.urls);
-          setSelectedImages([]);
+        if (data.success) {
           setCharge("Se han cargado las imagenes exitosamente");
         }
       }

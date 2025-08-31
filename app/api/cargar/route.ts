@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
 
     //se carga los datos del formulario y de sesion 
      const formData = await req.formData();
-     const { userId, sessionId } = await auth();
+     const { userId } = await auth();
 
 
     try {
@@ -69,35 +69,11 @@ export async function POST(req: NextRequest) {
 
 
 
-
-
-
         //SE EMPIEZA A CARGAR EL PRODUCTO 
 
-
         const idproducto = nanoid(); //se genera una ID para el producto
+        let imgUrls: string[] = [];//arreglo con los links de las imagenes
 
-
-
-                /*
-
-        //Se llama a la funcion para cargar el texto en Typesense
-         const result = await Textocharger(formData, idproducto, userId);
-
-        //Se revisa si la carga fue exitosa
-        if (!result.success) {
-            return NextResponse.json({
-                success: false,
-                message: result.message
-            }, { status: 400 });
-        }
-
-            */
-      
-
-      
-
-        const urls: string[] = [];//Variable para almacenar el arreglo de urls de las imagenes cargadas
 
         for (const image of images) {
             //Buffers para el manejo de imagenes
@@ -130,11 +106,19 @@ export async function POST(req: NextRequest) {
             const putCommand = new PutObjectCommand(uploadParams);
             await s3Client.send(putCommand);
 
+            //Se crea la URL Cloudfront de la imagen cargada
+            const cloudfrontUrl = `${process.env.AWS_CLOUDFRONT_DOMAIN}/${outputkey}`;
+            imgUrls.push(cloudfrontUrl);
+            cont = cont + 1;
+
+
+
+
+            /*
             //Esta parte utilizando el getObject es para traer la imagen una vez cargada
             const getObjectParams = {
                 Bucket: bucket,
-                Key: `$(image.name)`,
-                ACL: "private",
+                Key: outputkey,
             };
 
             const getCommand = new GetObjectCommand(getObjectParams);
@@ -143,18 +127,41 @@ export async function POST(req: NextRequest) {
             const url = await getSignedUrl(s3Client, getCommand, {
                 expiresIn: 50000,
             });
-
-            urls.push(url);
-            cont = cont + 1;
+                        */
+            
         }
+
+
+
+       //Se llama a la funcion para cargar el texto en Typesense
+         const result = await Textocharger(formData, idproducto, userId, imgUrls);
+
+        //Se revisa si la carga fue exitosa
+        if (!result.success) {
+            return NextResponse.json({
+                success: false,
+                message: result.message
+            }, { status: 400 });
+        }
+
+
+
+
+
+
+
 
         //Se construye el JSON en caso que todo sea exitoso
         return NextResponse.json({
             success: true,
             message: "Imagenes cargadas y recortadas correctamente",
-            data: { urls },
+            
         });
 
+
+
+
+        
     } catch (error) {
         //Se construye el JSON en caso de error en la carga, tambien se imprime por consola
         console.error("Upload error:", error);
