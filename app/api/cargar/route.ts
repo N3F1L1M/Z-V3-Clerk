@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
             await s3Client.send(putCommand);
 
             //Se crea la URL Cloudfront de la imagen cargada
-            const cloudfrontUrl = `${process.env.AWS_CLOUDFRONT_DOMAIN}/${outputkey}`;
+            const cloudfrontUrl = `https://${process.env.AWS_CLOUDFRONT_DOMAIN}/${outputkey}`;
             imgUrls.push(cloudfrontUrl);
             cont = cont + 1;   
         }

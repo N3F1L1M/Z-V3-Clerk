@@ -2,20 +2,23 @@
 
 import Tablaproductos from "./Tablaproductos";
 import BotomAgregarProducto from "./BotomAgregarProducto";
-import Imprimidor from './Imprimidor'
-
+import { auth } from "@clerk/nextjs/server";
 
 import { client } from '@/library/Typesense_client';
+import { clerkClient } from "@clerk/nextjs/server";
 
 //FUNCION BUSCADORA TYPESENSE
-async function buscadoratypesense() {  const searchParameters = {
-    q: 'stark',
-    query_by: 'company_name',
-    filter_by: '',
-    sort_by: '_text_match:desc'  };
+async function buscadoratypesense(userId) {
+
+    const searchParameters = {
+      q: userId,
+      query_by: 'id_tienda',
+      filter_by: '',
+      sort_by: '_text_match:desc'  };
+
  
   try { const results = await client
-      .collections('companies')
+      .collections('productos')
       .documents()
       .search(searchParameters);
 
@@ -34,15 +37,18 @@ async function buscadoratypesense() {  const searchParameters = {
 
   async function page() {
 
-  var datos = await buscadoratypesense();
+    const { userId } = await auth();
+
+    let datos = await buscadoratypesense(userId);
+
+    let productos = datos.hits.map(hit => hit.document);
+    //console.log(productos);
 
    return (
-     <div className="flex-grow bg-amber-100  p-4">
+     <div className="flex-grow bg-[#c2c0bc] p-4">
 
-
-      <Imprimidor datos={datos.hits} />
        <BotomAgregarProducto />
-       <Tablaproductos />
+       <Tablaproductos productos={productos} />
      </div>
    );
  }
