@@ -25,7 +25,7 @@ const Tablaproductos = ({ productos }) => {
               <td className="border border-black px-4 py-2">
                 <img width="100" src={p.imagenes[0]} className="rounded"/>
               </td>
-              <td className="border border-black px-4 py-2 flex gap-2">
+              <td className="border border-black px-4 py-2">
                 <a className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">Editar</a>
                 <a className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Eliminar</a>
               </td>
