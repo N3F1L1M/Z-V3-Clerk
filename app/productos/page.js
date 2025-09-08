@@ -3,9 +3,12 @@
 import Tablaproductos from "./Tablaproductos";
 import BotomAgregarProducto from "./BotomAgregarProducto";
 import { auth } from "@clerk/nextjs/server";
-
 import { client } from '@/library/Typesense_client';
-import { clerkClient } from "@clerk/nextjs/server";
+
+
+
+
+
 
 //FUNCION BUSCADORA TYPESENSE
 async function buscadoratypesense(userId) {
