@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import axios from "axios";
 import { useState, ChangeEvent, FormEvent } from "react";
 
@@ -16,6 +16,10 @@ export default function formulario() {
       const filesArray = Array.from(e.target.files);
       setSelectedImages(filesArray);
     }
+  };
+
+  const handleRemoveImage = (indexToRemove: number) => {
+    setSelectedImages((prev) => prev.filter((_, index) => index !== indexToRemove));
   };
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
@@ -202,6 +206,14 @@ return (
                           className="h-full w-full object-cover transition group-hover:scale-[1.02]"
                         />
                       </div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveImage(index)}
+                        className="absolute right-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-xs font-semibold text-white shadow-sm transition hover:bg-black focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                        aria-label={`Eliminar imagen ${index + 1}`}
+                      >
+                        &times;
+                      </button>
                       <div className="pointer-events-none absolute inset-0 rounded-lg ring-1 ring-inset ring-black/5" />
                     </div>
                   ))}
