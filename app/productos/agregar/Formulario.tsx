@@ -71,7 +71,7 @@ export default function formulario() {
 
   
 return (
-  <div className="mx-auto max-w-3xl p-6 md:p-8">
+  <div className="w-3/4 md:p-8">
     <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
       {/* Header */}
       <div className="border-b border-gray-200 px-6 py-5 md:px-8">
