@@ -1,6 +1,7 @@
 "use client";
 
 import { UserButton,useUser} from "@clerk/nextjs";
+import Link from "next/link";
 
 const Navbar = () => {
 
@@ -17,9 +18,9 @@ const Navbar = () => {
         <h1 className="text-xl font-bold">Zcatalogo Administradores</h1>
         {/* <h2 className="text-l font-bold">{user.firstName}</h2> */}
         <ul className="flex space-x-4">
-          <li><a href="#" className="hover:text-gray-400">Inicio</a></li>
-          <li><a href="#" className="hover:text-gray-400">Acerca</a></li>
-          <li><a href="#" className="hover:text-gray-400">Contacto</a></li>
+          <li><Link href="/" className="hover:text-gray-400">Inicio</Link></li>
+          <li><Link href="/nosotros" className="hover:text-gray-400">Acerca</Link></li>
+          <li><Link href="/" className="hover:text-gray-400">Contacto</Link></li>
           <li> <UserButton /> </li> 
         </ul>
       </div>
