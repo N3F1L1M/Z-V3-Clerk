@@ -71,8 +71,18 @@ export default function formulario() {
 
   
 return (
-  <div className="w-3/4 md:p-8">
-    <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+  
+
+    <div className="rounded-2xl border border-gray-200 bg-white shadow-sm w-3/4 md:p-8">
+
+
+
+
+
+
+
+
+
       {/* Header */}
       <div className="border-b border-gray-200 px-6 py-5 md:px-8">
         <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-gray-900">
@@ -85,6 +95,17 @@ return (
 
       {/* Form */}
       <form className="space-y-8 px-6 py-6 md:px-8" onSubmit={submit}>
+
+
+
+
+
+
+
+
+
+
+
         {/* Básicos */}
         <section>
           <h3 className="mb-4 text-sm font-medium uppercase tracking-wide text-gray-500">
@@ -135,6 +156,22 @@ return (
             </div>
           </div>
         </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         {/* Medios */}
         <section>
@@ -223,6 +260,23 @@ return (
           </div>
         </section>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         {/* Detalles */}
         <section>
           <h3 className="mb-4 text-sm font-medium uppercase tracking-wide text-gray-500">
@@ -270,6 +324,26 @@ return (
           </div>
         </section>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         {/* Acciones */}
         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end">
           <input
@@ -293,8 +367,11 @@ return (
           <h3 className="text-center text-sm font-medium text-gray-700">{charge}</h3>
         </div>
       )}
+
+
+
     </div>
-  </div>
+ 
 );
 
 }
