@@ -12,6 +12,12 @@ import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
+//SHADCN
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/Sidebar shadcn/app-sidebar"
+import { ThemeProvider } from "@/lib/theme-provider";
+import { ModeToggle } from "@/components/mode-toogle";
+
 //METADATA
 export const metadata: Metadata = {
   title: "Zcatalogo",
@@ -26,20 +32,26 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
 
   return (
     <ClerkProvider localization={esMX}>
-      <html lang="es">
+      <html lang="es" suppressHydrationWarning>
+
         <body className="flex flex-wrap border-red-700 border-2">
+           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
 
           <header className="w-screen  border-amber-400 border-2">
             <Navbar />
           </header>
 
-          <main className="w-screen flex flex-wrap border-amber-700 border-2">
-            <Sidebar />
-            {children}
-          </main>
+         <SidebarProvider>
+      <AppSidebar />
+      <main>
+        <SidebarTrigger />
+        <ModeToggle />
+        {children}
+      </main>
+    </SidebarProvider>
 
           <Footer/>
-          
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

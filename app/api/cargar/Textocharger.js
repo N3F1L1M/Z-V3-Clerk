@@ -1,5 +1,5 @@
 
-import { client } from '@/library/Typesense_client';
+import { client } from '@/lib/Typesense_client';
 
 
 
