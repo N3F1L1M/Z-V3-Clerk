@@ -37,16 +37,15 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
         <body className="flex flex-wrap border-red-700 border-2">
            <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
 
-          <header className="w-screen  border-amber-400 border-2">
-            <Navbar />
-          </header>
-
+          
          <SidebarProvider>
       <AppSidebar />
-      <main>
+      <main className="w-full">
+        <Navbar />
         <SidebarTrigger />
         <ModeToggle />
         {children}
+
       </main>
     </SidebarProvider>
 
