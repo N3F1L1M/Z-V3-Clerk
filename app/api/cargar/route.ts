@@ -10,8 +10,6 @@ import Textocharger from "./Textocharger";
 
 
 
-
-
 //SE INICIA EL CLIENTE DE AWS
 const { S3Client } = require("@aws-sdk/client-s3");
 //Se asignan variables en base a los valores del .env
