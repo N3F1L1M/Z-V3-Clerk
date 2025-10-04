@@ -10,7 +10,7 @@ import { esMX } from "@clerk/localizations";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
-
+import Footer from "@/components/Footer";
 
 //METADATA
 export const metadata: Metadata = {
@@ -38,9 +38,7 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
             {children}
           </main>
 
-          <footer className="w-screen border-b-red-500 border-2">
-            Pie de página
-          </footer>
+          <Footer/>
           
         </body>
       </html>

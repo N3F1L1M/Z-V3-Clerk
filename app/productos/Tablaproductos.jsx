@@ -1,35 +1,491 @@
-import React from 'react'
+"use client";
 
-const Tablaproductos = (props) => {
+import React, { useState, useMemo } from 'react';
+import { 
+  Search, 
+  Edit, 
+  Trash2, 
+  Eye, 
+  Filter, 
+  ChevronLeft,
+  ChevronRight,
+  Package,
+  Image as ImageIcon,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  BookOpen,
+  Check
+} from 'lucide-react';
+
+const TablaProductos = ({ productos = [] }) => {
+  // Estados para funcionalidades
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortField, setSortField] = useState('id');
+  const [sortDirection, setSortDirection] = useState('asc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [showFilters, setShowFilters] = useState(false);
+  const [priceFilter, setPriceFilter] = useState({ min: '', max: '' });
+  const [copiedId, setCopiedId] = useState(null);
+
+  // Función para formatear precio
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN'
+    }).format(price);
+  };
+
+  // Función para obtener estado del producto
+  const getProductStatus = (producto) => {
+    const stock = producto.stock || Math.floor(Math.random() * 100);
+    if (stock === 0) return { status: 'sin-stock', label: 'Sin stock', color: 'text-red-600 bg-red-50 border-red-200' };
+    if (stock < 10) return { status: 'bajo-stock', label: 'Bajo stock', color: 'text-yellow-600 bg-yellow-50 border-yellow-200' };
+    return { status: 'en-stock', label: 'En stock', color: 'text-green-600 bg-green-50 border-green-200' };
+  };
+
+  // Función para manejar ordenamiento
+  const handleSort = (field) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  // Productos filtrados y ordenados
+  const filteredAndSortedProducts = useMemo(() => {
+    let filtered = productos.filter(producto => {
+      const matchesSearch = producto.titulo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           producto.id?.toString().includes(searchTerm);
+      
+      const matchesPrice = (!priceFilter.min || parseFloat(producto.precio) >= parseFloat(priceFilter.min)) &&
+                          (!priceFilter.max || parseFloat(producto.precio) <= parseFloat(priceFilter.max));
+      
+      return matchesSearch && matchesPrice;
+    });
+
+    // Ordenar
+    filtered.sort((a, b) => {
+      let aValue = a[sortField];
+      let bValue = b[sortField];
+
+      if (sortField === 'precio') {
+        aValue = parseFloat(aValue) || 0;
+        bValue = parseFloat(bValue) || 0;
+      }
+
+      if (typeof aValue === 'string') {
+        aValue = aValue.toLowerCase();
+        bValue = bValue.toLowerCase();
+      }
+
+      if (sortDirection === 'asc') {
+        return aValue > bValue ? 1 : -1;
+      } else {
+        return aValue < bValue ? 1 : -1;
+      }
+    });
+
+    return filtered;
+  }, [productos, searchTerm, sortField, sortDirection, priceFilter]);
+
+  // Paginación
+  const totalPages = Math.ceil(filteredAndSortedProducts.length / itemsPerPage);
+  const paginatedProducts = filteredAndSortedProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  // Funciones de acciones
+  const handleEdit = (productId) => {
+    console.log('Editar producto:', productId);
+    // Aquí implementarías la lógica de edición
+  };
+
+  const handleDelete = (productId) => {
+    console.log('Eliminar producto:', productId);
+    // Aquí implementarías la lógica de eliminación
+  };
+
+  const handleView = (productId) => {
+    console.log('Ver producto:', productId);
+    // Aquí implementarías la lógica para ver detalles
+  };
+
+  // Función para copiar ID al portapapeles
+  const handleCopyId = async (productId) => {
+    try {
+      await navigator.clipboard.writeText(productId.toString());
+      setCopiedId(productId);
+      setTimeout(() => setCopiedId(null), 2000); // Resetear después de 2 segundos
+    } catch (err) {
+      console.error('Error al copiar ID:', err);
+      // Fallback para navegadores que no soportan clipboard API
+      const textArea = document.createElement('textarea');
+      textArea.value = productId.toString();
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setCopiedId(productId);
+      setTimeout(() => setCopiedId(null), 2000);
+    }
+  };
+
+  // Función para manejar selección
+  const toggleProductSelection = (productId) => {
+    setSelectedProducts(prev => 
+      prev.includes(productId) 
+        ? prev.filter(id => id !== productId)
+        : [...prev, productId]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedProducts.length === paginatedProducts.length) {
+      setSelectedProducts([]);
+    } else {
+      setSelectedProducts(paginatedProducts.map(p => p.id));
+    }
+  };
+
+  // Componente de icono de ordenamiento
+  const SortIcon = ({ field }) => {
+    if (sortField !== field) return <ArrowUpDown className="w-4 h-4 text-gray-400" />;
+    return sortDirection === 'asc' 
+      ? <ArrowUp className="w-4 h-4 text-blue-600" />
+      : <ArrowDown className="w-4 h-4 text-blue-600" />;
+  };
+
+  if (productos.length === 0) {
+    return (
+      <div className="p-8 text-center">
+        <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+        <p className="text-gray-600">No hay productos para mostrar</p>
+      </div>
+    );
+  }
+
   return (
-     <div className="overflow-x-auto p-5">
-    <table className="w-full  ">
-        <thead>
-            <tr className="bg-gray-200">
-                <th className="border border-gray-300 px-4 py-2">ID</th>
-                <th className="border border-gray-300 px-4 py-2">Titulo</th>
-                <th className="border border-gray-300 px-4 py-2">Precio</th>
-                <th className="border border-gray-300 px-4 py-2">Foto Portada</th>
-                <th className="border border-gray-300 px-4 py-2">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr className="border border-gray-300">
-                <td className="border border-gray-300 px-4 py-2">hola</td>
-                <td className="border border-gray-300 px-4 py-2">como </td>
-                <td className="border border-gray-300 px-4 py-2">estas</td>
-                <td className="border border-gray-300 px-4 py-2">
-                    <img width="100" src="@favicon.ico" className="rounded" alt=""/>
-                </td>
-                <td className="border border-gray-300 px-4 py-2 flex gap-2">
-                    <a className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600" href="editar.php?txtID=" role="button">Editar</a>
-                    <a className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" href="borrar.php?txtID=" role="button">Eliminar</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div> 
-  )
-}
+    <div className="p-6">
+      {/* Header con búsqueda y filtros */}
+      <div className="mb-6 space-y-4">
+        <div className="flex flex-col sm:flex-row gap-4">
+          {/* Búsqueda */}
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Buscar productos por nombre o ID..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            />
+          </div>
 
-export default Tablaproductos
+          {/* Botones de acción */}
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <Filter className="w-4 h-4" />
+              Filtros
+            </button>
+
+            {selectedProducts.length > 0 && (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">
+                  {selectedProducts.length} seleccionados
+                </span>
+                <button className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700">
+                  Eliminar
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Filtros desplegables */}
+        {showFilters && (
+          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Precio mínimo
+                </label>
+                <input
+                  type="number"
+                  value={priceFilter.min}
+                  onChange={(e) => setPriceFilter({...priceFilter, min: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  placeholder="0"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Precio máximo
+                </label>
+                <input
+                  type="number"
+                  value={priceFilter.max}
+                  onChange={(e) => setPriceFilter({...priceFilter, max: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  placeholder="999999"
+                />
+              </div>
+              <div className="flex items-end">
+                <button
+                  onClick={() => {
+                    setPriceFilter({ min: '', max: '' });
+                    setSearchTerm('');
+                  }}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                >
+                  Limpiar filtros
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Tabla */}
+      <div className="overflow-x-auto rounded-lg border border-gray-200">
+        <table className="w-full bg-white">
+          <thead className="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th className="px-4 py-3 text-left">
+                <input
+                  type="checkbox"
+                  checked={selectedProducts.length === paginatedProducts.length && paginatedProducts.length > 0}
+                  onChange={toggleSelectAll}
+                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+              </th>
+              
+              <th 
+                className="px-4 py-3 text-left text-sm font-medium text-gray-900 cursor-pointer hover:bg-gray-100 transition-colors"
+                onClick={() => handleSort('titulo')}
+              >
+                <div className="flex items-center gap-2">
+                  Producto
+                  <SortIcon field="titulo" />
+                </div>
+              </th>
+              
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-900">
+                Imagen
+              </th>
+              
+              <th 
+                className="px-4 py-3 text-left text-sm font-medium text-gray-900 cursor-pointer hover:bg-gray-100 transition-colors"
+                onClick={() => handleSort('precio')}
+              >
+                <div className="flex items-center gap-2">
+                  Precio
+                  <SortIcon field="precio" />
+                </div>
+              </th>
+              
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-900">
+                Estado
+              </th>
+              
+              <th className="px-4 py-3 text-center text-sm font-medium text-gray-900">
+                Acciones
+              </th>
+            </tr>
+          </thead>
+          
+          <tbody className="divide-y divide-gray-200">
+            {paginatedProducts.map((producto) => {
+              const status = getProductStatus(producto);
+              
+              return (
+                <tr key={producto.id} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-4 py-4">
+                    <input
+                      type="checkbox"
+                      checked={selectedProducts.includes(producto.id)}
+                      onChange={() => toggleProductSelection(producto.id)}
+                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                  </td>
+                  
+                  <td className="px-4 py-4">
+                    <div className="max-w-xs">
+                      <p className="text-sm font-medium text-gray-900 truncate">
+                        {producto.titulo}
+                      </p>
+                  
+                    </div>
+                  </td>
+                  
+                  <td className="px-4 py-4">
+                    {producto.imagenes && producto.imagenes[0] ? (
+                      <img 
+                        src={producto.imagenes[0]} 
+                        alt={producto.titulo}
+                        className="w-12 h-12 rounded-lg object-cover border border-gray-200"
+                        onError={(e) => {
+                          e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA0OCA0OCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNCAzOFY4YzAtMS4xLjktMiAyLTJoMzZjMS4xIDAgMiAuOSAyIDJ2MzBjMCAxLjEtLjkgMi0yIDJINmMtMS4xIDAtMi0uOS0yLTJ6IiBzdHJva2U9IiNEMUQ1REIiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0xNCAxOGE0IDQgMCAxIDAgOCAwIDQgNCAwIDAgMC04IDB6TTE0IDMybDE0LTE0IDEwIDEwIiBzdHJva2U9IiNEMUQ1REIiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+';
+                        }}
+                      />
+                    ) : (
+                      <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
+                        <ImageIcon className="w-6 h-6 text-gray-400" />
+                      </div>
+                    )}
+                  </td>
+                  
+                  <td className="px-4 py-4">
+                    <span className="text-sm font-semibold text-gray-900">
+                      {formatPrice(producto.precio)}
+                    </span>
+                  </td>
+                  
+                  <td className="px-4 py-4">
+                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full border ${status.color}`}>
+                      {status.label}
+                    </span>
+                  </td>
+                  
+                  <td className="px-4 py-4">
+                    <div className="flex items-center justify-center space-x-2">
+                      <button
+                        onClick={() => handleCopyId(producto.id)}
+                        className={`p-2 rounded-lg transition-all duration-200 ${
+                          copiedId === producto.id 
+                            ? 'text-green-600 bg-green-50 hover:bg-green-100' 
+                            : 'text-gray-600 hover:text-purple-600 hover:bg-purple-50'
+                        }`}
+                        title={copiedId === producto.id ? 'ID copiado!' : 'Copiar ID'}
+                      >
+                        {copiedId === producto.id ? (
+                          <Check className="w-4 h-4" />
+                        ) : (
+                          <BookOpen className="w-4 h-4" />
+                        )}
+                      </button>
+
+                      <button
+                        onClick={() => handleView(producto.id)}
+                        className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        title="Ver detalles"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
+                      
+                      <button
+                        onClick={() => handleEdit(producto.id)}
+                        className="p-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                        title="Editar"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      
+                      <button
+                        onClick={() => handleDelete(producto.id)}
+                        className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        title="Eliminar"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Paginación */}
+      {totalPages > 1 && (
+        <div className="mt-6 flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <span className="text-sm text-gray-700">
+              Mostrar
+            </span>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => {
+                setItemsPerPage(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+              className="border border-gray-300 rounded px-2 py-1 text-sm"
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+            </select>
+            <span className="text-sm text-gray-700">
+              de {filteredAndSortedProducts.length} productos
+            </span>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+              className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+
+            <div className="flex space-x-1">
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNumber;
+                if (totalPages <= 5) {
+                  pageNumber = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNumber = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNumber = totalPages - 4 + i;
+                } else {
+                  pageNumber = currentPage - 2 + i;
+                }
+
+                return (
+                  <button
+                    key={pageNumber}
+                    onClick={() => setCurrentPage(pageNumber)}
+                    className={`px-3 py-1 text-sm rounded-lg ${
+                      currentPage === pageNumber
+                        ? 'bg-blue-600 text-white'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    {pageNumber}
+                  </button>
+                );
+              })}
+            </div>
+
+            <button
+              onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages}
+              className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Info de resultados */}
+      <div className="mt-4 text-center text-sm text-gray-500">
+        Mostrando {paginatedProducts.length} de {filteredAndSortedProducts.length} productos
+        {filteredAndSortedProducts.length !== productos.length && ` (filtrado de ${productos.length} total)`}
+      </div>
+    </div>
+  );
+};
+
+export default TablaProductos;
