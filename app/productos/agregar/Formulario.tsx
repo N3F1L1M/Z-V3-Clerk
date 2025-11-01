@@ -3,12 +3,19 @@
 import { useState, type ChangeEvent, type FormEvent } from "react"
 import axios from "axios"
 
+
+
+
 export default function FormularioProducto() {
+
+
+
   // VARIABLES o ESTADOS (Hook de react)
   const [selectedImages, setSelectedImages] = useState<File[]>([]) // imagenes que se agregan al formulario
-  const [images, setImages] = useState<string[]>([]) // guardan las urls de las imagenes que se carguen
   const [charge, setCharge] = useState<string>("") // mensajes del proceso de envio al S3 e.j: "Procesando..."
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+
 
   // FUNCIONES MANEJADORAS DE EVENTOS
 
@@ -23,6 +30,11 @@ export default function FormularioProducto() {
   const handleRemoveImage = (indexToRemove: number) => {
     setSelectedImages((prev) => prev.filter((_, index) => index !== indexToRemove))
   }
+
+
+
+
+
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
     // maneja el boton de submit
@@ -81,24 +93,47 @@ export default function FormularioProducto() {
     }
   }
 
+
+
+
+
+
+
+
+
+
+
+
   return (
     <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <div className="rounded-xl sm:rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+
+
         {/* Header */}
         <div className="border-b border-gray-200 px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
           <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold tracking-tight text-gray-900">Añadir producto</h2>
           <p className="mt-1 text-xs sm:text-sm text-gray-500">
-            Completa los detalles para publicar un nuevo artículo en tu tienda.
+            Completa los detalles para publicar un nuevo artículo en su tienda.
           </p>
         </div>
 
+
+
         {/* Form */}
         <form className="space-y-6 sm:space-y-8 px-4 py-5 sm:px-6 sm:py-6 lg:px-8" onSubmit={submit}>
+
+
+
+
+
+
           {/* Básicos */}
           <section>
             <h3 className="mb-3 sm:mb-4 text-xs sm:text-sm font-medium uppercase tracking-wide text-gray-500">
-              Información básica
+              Información Principal
             </h3>
+
+
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
               {/* Título */}
@@ -144,6 +179,17 @@ export default function FormularioProducto() {
               </div>
             </div>
           </section>
+
+
+
+
+
+
+
+
+
+
+
 
           {/* Medios */}
           <section>
@@ -234,6 +280,17 @@ export default function FormularioProducto() {
             </div>
           </section>
 
+
+
+
+
+
+
+
+
+
+
+
           {/* Detalles */}
           <section>
             <h3 className="mb-3 sm:mb-4 text-xs sm:text-sm font-medium uppercase tracking-wide text-gray-500">
@@ -276,6 +333,15 @@ export default function FormularioProducto() {
             </div>
           </section>
 
+
+
+
+
+
+
+
+
+
           {/* Acciones */}
           <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-end pt-2">
             <button
@@ -314,6 +380,12 @@ export default function FormularioProducto() {
             </button>
           </div>
         </form>
+
+
+
+
+
+
 
         {/* Footer / estado de carga */}
         {charge && (

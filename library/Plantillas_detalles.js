@@ -13,3 +13,4 @@ export const plantillas = [
     potencia: "540 HP",
   }
 ];
+
