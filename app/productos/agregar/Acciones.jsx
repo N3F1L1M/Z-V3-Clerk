@@ -7,7 +7,7 @@ export default function Acciones(props) {
 
 
 
-            <button type="reset" disabled={props.isSubmitting}
+            <button type="reset"
               className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg 
               border border-gray-300 bg-white px-4 py-2.5 sm:py-3 text-sm font-medium
                text-gray-700 shadow-sm transition hover:bg-gray-50 active:bg-gray-100

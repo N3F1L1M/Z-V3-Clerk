@@ -28,8 +28,11 @@ export default function FormularioProducto() {
   const plantillas = structuredClone(plantillasOriginal);
   const [selectedImages, setSelectedImages] = useState([]); // imagenes que se agregan al formulario
   const [charge, setCharge] = useState(""); // mensajes del proceso de envio al S3 e.j: "Procesando..."
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedDetalles, setSelectedDetalles] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+
+
 
 
 
@@ -65,58 +68,53 @@ export default function FormularioProducto() {
    async function submit (e)  {
     
     e.preventDefault()
-    setIsSubmitting(true)
+    
 
     try {
+        
       // Se verifica que el campo de imagenes tenga al menos 1 imagen
-      if (selectedImages.length > 0) {
+      if (selectedImages.length > 0) { 
+        
         setCharge("Procesando...")
         const formData = new FormData()
 
-        // Se carga un objeto del formulario con las imagenes
-        selectedImages.forEach((image) => {
-          formData.append("images", image)
-        })
-
-        // se agregan los campos de texto al formulario
+        // Se agregan los datos al formulario
         formData.append("titulo", e.currentTarget.titulo.value)
         formData.append("precio", e.currentTarget.precio.value)
-        formData.append("detalles", e.currentTarget.detalles.value)
         formData.append("descripcion", e.currentTarget.descripcion.value)
+        selectedImages.forEach((image) => {formData.append("images", image)})
+        //formData.append("detalles", JSON.stringify(selectedDetalles))
 
         // se envia los datos que se agregaron al formulario a la ruta de api/s3
         // Para que la peticion acepte imagenes y no texto, especificamos que el contentType sea multipart/form-data
-        const { data } = await axios.post("/api/cargar", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        })
+        const {data} = await axios.post("/api/cargar", formData, {headers: { "Content-Type": "multipart/form-data" },})
 
-        setCharge("Enviando a Bucket...")
 
         // Condicional para validar que la peticion fue exitosa
         if (data.success) {
-          setCharge("Se han cargado las imagenes exitosamente")
-          // Limpiar formulario después de éxito
-          setTimeout(() => {
-            setSelectedImages([])
-            setCharge("")
-            e.currentTarget.reset()
-          }, 2000)
+          setCharge("Se ha cargado el producto exitosamente.")
+          setIsSubmitting(true);
+          //setTimeout(() => { setSelectedImages([]); setCharge(""); e.currentTarget.reset(); }, 2000)
         }
-      } else {
-        setCharge("Por favor, selecciona al menos una imagen")
-      }
-    } catch (error) {
-      // manejadora de errores
+
+
+      } else { setCharge("Por favor, selecciona al menos una imagen") }
+        
+
+
+
+
+      
+    } catch (error) { // manejadora de errores
+    
       console.log(error)
       // busca si el APi lanzo mensaje de error, si no tira uno por defecto.
-      if (error.response?.data?.message) {
-        setCharge(error.response.data.message)
-      } else {
-        setCharge("Ha ocurrido un error...")
-      }
-    } finally {
-      setIsSubmitting(true)
-    }
+      if (error.response?.data?.message) { setCharge(error.response.data.message) }
+      else { setCharge("Ha ocurrido un Error...") }
+    
+    } 
+
+
   }
 
 
@@ -161,7 +159,8 @@ export default function FormularioProducto() {
 
             <Descripcion isSubmitting={isSubmitting} />
 
-            <Acciones    isSubmitting={isSubmitting} />
+            <Acciones    isSubmitting={isSubmitting} 
+                      setIsSubmitting={setIsSubmitting} />
 
         </form> 
 
@@ -173,17 +172,15 @@ export default function FormularioProducto() {
         {/* Footer / estado de carga */}
         {charge && (
           <div className="border-t border-gray-200 px-4 py-3 sm:px-6 sm:py-4 lg:px-8">
+
             <div
-              className={`text-center text-xs sm:text-sm font-medium ${
-                charge.includes("exitosamente")
-                  ? "text-green-700 bg-green-50 py-2 rounded-lg"
-                  : charge.includes("error")
-                    ? "text-red-700 bg-red-50 py-2 rounded-lg"
-                    : "text-gray-700"
-              }`}
-            >
-              {charge}
-            </div>
+              className={`text-center text-xs sm:text-sm font-medium 
+                ${charge.includes("exitosamente")
+              ? "text-green-700 bg-green-50 py-2 rounded-lg"
+              : charge.includes("Error")? "text-red-700 bg-red-50 py-2 rounded-lg": "text-gray-700"}`}>
+
+              {charge} </div>
+            
           </div>
         )}
 
