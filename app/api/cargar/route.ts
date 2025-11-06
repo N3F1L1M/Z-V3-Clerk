@@ -35,6 +35,8 @@ export async function POST(req: NextRequest) {
 
 
 
+        
+
         //SE EMPIEZA A CARGAR EL PRODUCTO 
 
         const idproducto = nanoid(); //se genera una ID para el producto
