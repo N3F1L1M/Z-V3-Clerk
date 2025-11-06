@@ -1,31 +1,120 @@
+
 import React from 'react'
-import Select from "react-select";
+import Select from "react-select"
+
+
+
+
 
 export default function Detalles(props) {
+
+  
+
   return (
-     <section className="border">
-            <h3 className="mb-3 sm:mb-4 text-xs sm:text-sm font-medium uppercase tracking-wide text-gray-500">
-              Detalles
-            </h3>
 
-            <div className="grid grid-cols-1 gap-4 sm:gap-5">
-              <div className="flex flex-col gap-1.5">
-                <label htmlFor="detalles" className="text-sm font-medium text-gray-700">
-                  Detalles (opcional)
-                </label>
-                <input
-                  id="detalles"
-                  type="text"
-                  placeholder="Color, talla, material…"
-                  name="detalles"
-                  disabled={props.isSubmitting}
-                  className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 sm:py-3 text-sm sm:text-base text-gray-900 placeholder:text-gray-400 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 disabled:bg-gray-50 disabled:cursor-not-allowed"
-                />
-                <p className="text-xs text-gray-500">Texto corto que aparece junto al título.</p>
+    <section className="w-2/3 justify-center items-center m-auto mt-20">
+
+
+         {/* Formulario con Select y campos dinámicos */}
+      
+        <Select
+          instanceId="plantillas"
+          options={props.plantillas}
+          isSearchable={true}
+          isMulti={true}
+          closeMenuOnSelect={false}
+          value={props.selectedDetalles}
+          onChange={props.handleselectedDetalles}
+          placeholder="Selecciona una o varias plantillas..."/>
+
+
+
+
+
+
+          {/* Mostrar el estado actual de Detalles en formato JSON */}
+        <pre className="mt-4 bg-gray-100 p-2 rounded text-sm">
+          {JSON.stringify(props.selectedDetalles, null, 2)}
+        </pre> 
+
+
+
+
+
+
+
+
+          {/* Campos dinámicos basados en la selección */}
+
+        <div className="mt-6 space-y-6">
+          {props.selectedDetalles?.map((plantilla, index) => (
+
+
+
+
+            <div key={plantilla.value} className="border rounded-xl p-4 bg-gray-50 shadow-sm">
+
+              <h2 className="text-lg font-semibold mb-3 text-gray-800">{plantilla.label}</h2>
+
+              <div className="grid grid-cols-2 gap-3">
+
+                {Object.entries(plantilla).map(([campo, propiedades]) => {
+                  if (["label", "value", "id"].includes(campo)) return null;
+                  return (
+
+                    <div key={campo} className="flex flex-col">
+                      <label className="text-sm text-gray-600">{campo}</label>
+
+
+
+                            {propiedades.input ? (
+
+                             <input
+                             type="text"
+                             className="border rounded px-2 py-1 text-sm"
+                             placeholder={propiedades.placeholder}
+                             value={propiedades.value || ""}
+                             onChange={(e) => props.handleModificaDetalles(index, campo, e.target.value)}/>
+                             
+                             ) : null}
+
+
+
+
+                             {propiedades.select ? (
+
+                             <Select
+                              instanceId="campos-select" 
+                              placeholder={propiedades.placeholder}
+                              value={propiedades.value || ""}      
+                              options={propiedades.select.map((opt) => ({label: opt, value: opt}))}
+                              isMulti={propiedades.ismulti || false}
+                              isSearchable={propiedades.searchable || false}
+                              closeMenuOnSelect={!propiedades.ismulti || true}
+                              onChange={(e) => props.handleModificaDetalles(index, campo, e)}/>
+
+                              
+                             ) : null}
+
+
+
+
+
+                    </div>
+                  );
+
+
+                })}
               </div>
-
-              
             </div>
-          </section>
-  )
+
+
+          ))}
+        </div>
+
+
+
+    </section>
+  );
+  
 }

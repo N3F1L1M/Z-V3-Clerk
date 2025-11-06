@@ -3,7 +3,7 @@
 import Tablaproductos from "./Tablaproductos";
 import BotomAgregarProducto from "./BotomAgregarProducto";
 import { auth } from "@clerk/nextjs/server";
-import { client } from '@/library/Typesense_client';
+import { client } from '@/lib/Typesense_client';
 
 
 
