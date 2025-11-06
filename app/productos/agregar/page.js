@@ -126,11 +126,11 @@ export default function FormularioProducto() {
   return (
 
     <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 border">
-      <div className="rounded-xl sm:rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+      <div className="rounded-xl sm:rounded-2xl border border-gray-300 bg-white shadow-sm overflow-hidden">
 
 
         {/* Header */}
-        <div className="border  px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
+        <div className="border border-gray-300  px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
           <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold tracking-tight text-gray-900">Añadir producto</h2>
           <p className="mt-1 text-xs sm:text-sm text-gray-500">
             Completa los detalles para publicar un nuevo artículo en su tienda.
@@ -140,7 +140,7 @@ export default function FormularioProducto() {
 
 
 
-      <form className="space-y-6 sm:space-y-8 px-4 py-5 sm:px-6 sm:py-6 lg:px-8 border" onSubmit={submit}>
+      <form className="space-y-6 sm:space-y-8 px-4 py-5 sm:px-6 sm:py-6 lg:px-8" onSubmit={submit}>
 
             <Basicos     isSubmitting={isSubmitting} />
 

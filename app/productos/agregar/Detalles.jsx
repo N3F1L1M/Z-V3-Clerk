@@ -12,7 +12,7 @@ export default function Detalles(props) {
 
   return (
 
-    <section className="w-2/3 justify-center items-center m-auto mt-20">
+    <section className="border border-gray-300 rounded-lg sm:rounded-xl p-4 sm:p-6">
 
 
          {/* Formulario con Select y campos dinámicos */}

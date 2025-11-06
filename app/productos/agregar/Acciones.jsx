@@ -3,7 +3,7 @@ import React from 'react'
 export default function Acciones(props) {
   return (
     
-    <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-end pt-2 border">
+    <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-end pt-2 border border-gray-300 rounded-lg sm:rounded-xl ">
             <button
               type="reset"
               disabled={props.isSubmitting}

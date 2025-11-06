@@ -8,7 +8,7 @@ export default function Basicos(props) {
 
     
   return (
-     <section className="border">
+     <section className="border border-gray-300 rounded-lg sm:rounded-xl p-4 sm:p-6">
             <h3 className="mb-3 sm:mb-4 text-xs sm:text-sm font-medium uppercase tracking-wide text-gray-500">
               Información Principal
             </h3>

@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function Descripcion(props) {
   return (
-    <div className="flex flex-col gap-1.5 border">
+    <div className="border border-gray-300 rounded-lg sm:rounded-xl p-4 sm:p-6">
                 <label htmlFor="descripcion" className="text-sm font-medium text-gray-700">
                   Descripción
                 </label>
