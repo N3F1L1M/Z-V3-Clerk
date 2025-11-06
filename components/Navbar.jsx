@@ -13,7 +13,7 @@ const Navbar = () => {
     
 
     return (
-      <nav className="bg-gray-900 text-white px-6 py-4  w-full h-15 top-0 left-0 sticky">
+      <nav className="bg-gray-900 text-white px-6 py-4  h-15 top-0 left-0 sticky">
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-bold">Zcatalogo Administradores</h1>
         {/* <h2 className="text-l font-bold">{user.firstName}</h2> */}
