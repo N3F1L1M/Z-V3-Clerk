@@ -46,17 +46,9 @@ export default function FormularioProducto() {
   function handleRemoveImage (indexToRemove) {
     setSelectedImages((prev) => prev.filter((_, index) => index !== indexToRemove))}
 
-    // maneja los detalles seleccionados
-  function handleselectedDetalles(selectedOptions) { 
-    const random = selectedOptions?.map((item) => ({...item,value: Math.random(),})) || [];
-     setSelectedDetalles(random); }
 
-    // maneja la edicion de detalles seleccionados
-    function handleModificaDetalles(index, campo, valor) {
-    const nuevos = [...selectedDetalles];
-    nuevos[index][campo].value = valor;
-    setSelectedDetalles(nuevos);
-  }
+
+
 
 
 
@@ -158,11 +150,9 @@ export default function FormularioProducto() {
             <Detalles    plantillas={plantillas}
                          isSubmitting={isSubmitting}
                          selectedDetalles={selectedDetalles}
-                         handleselectedDetalles={handleselectedDetalles}
-                         handleModificaDetalles={handleModificaDetalles}/>
+                         setSelectedDetalles={setSelectedDetalles}/>
                          
-                         
-                            
+                      
 
             <Descripcion isSubmitting={isSubmitting} />
 

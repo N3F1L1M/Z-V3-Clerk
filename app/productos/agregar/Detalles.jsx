@@ -8,7 +8,36 @@ import Select from "react-select"
 
 export default function Detalles(props) {
 
-  
+
+
+   //FUNCIONES MANEJADORAS DE ESTADOS 
+
+
+      // maneja los detalles seleccionados
+  function handleselectedDetalles(selectedOptions) { 
+    const random = selectedOptions?.map((item) => ({...item,value: Math.random(),})) || [];
+     props.setSelectedDetalles(random); }
+
+
+   //agrega el titulo 
+        function tituladora(index, titulo) {
+          const nuevo = props.selectedDetalles.map((detalle, ind) => {
+            if (ind === index) { return { ...detalle, titulo: titulo };
+            } else {return detalle; }   });
+          props.setSelectedDetalles(nuevo); }
+
+
+        // maneja la edicion de detalles seleccionados
+    function handleModificaDetalles(index, campo, valor) {
+    const nuevos = [...props.selectedDetalles];
+    nuevos[index][campo].value = valor;
+    props.setSelectedDetalles(nuevos);
+  }
+
+
+
+
+
 
   return (
 
@@ -25,7 +54,7 @@ export default function Detalles(props) {
           isMulti={true}
           closeMenuOnSelect={false}
           value={props.selectedDetalles}
-          onChange={props.handleselectedDetalles}
+          onChange={handleselectedDetalles}
           placeholder="Selecciona una o varias plantillas..."/>
 
 
@@ -60,7 +89,16 @@ export default function Detalles(props) {
               <div className="grid grid-cols-2 gap-3">
 
                  <h2 className="text-lg font-semibold mb-3 text-gray-800">{plantilla.label}</h2>
-                  <h2 className="text-lg font-semibold mb-3 text-gray-800">{plantilla.label}</h2>
+
+                 <input
+                             type="text"
+                             value={plantilla.titulo || ""}
+                             className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 sm:py-3 text-sm sm:text-base text-gray-900 placeholder:text-gray-400 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 disabled:bg-gray-50 disabled:cursor-not-allowed"
+                             placeholder="Titulo de la plantilla ( opcional )"
+                             disabled={props.isSubmitting}
+                             onChange={(e) => { tituladora(index, e.target.value ) }}/>
+
+                  
 
                 {Object.entries(plantilla).map(([campo, propiedades]) => {
                   if (["label", "value", "id"].includes(campo)) return null;
@@ -79,7 +117,7 @@ export default function Detalles(props) {
                              placeholder={propiedades.placeholder}
                              disabled={props.isSubmitting}
                              value={propiedades.value || ""}
-                             onChange={(e) => props.handleModificaDetalles(index, campo, e.target.value)}/>
+                             onChange={(e) => handleModificaDetalles(index, campo, e.target.value)}/>
                              
                              ) : null}
 
@@ -97,7 +135,7 @@ export default function Detalles(props) {
                               isMulti={propiedades.ismulti || false}
                               isSearchable={propiedades.searchable || false}
                               closeMenuOnSelect={!propiedades.ismulti || true}
-                              onChange={(e) => props.handleModificaDetalles(index, campo, e)}
+                              onChange={(e) => handleModificaDetalles(index, campo, e)}
                               className="w-full rounded-lg border border-gray-300 bg-white px-3  sm:py-1.5 text-sm sm:text-base text-gray-900 placeholder:text-gray-400 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 disabled:bg-gray-50 disabled:cursor-not-allowed"/>
 
                               
