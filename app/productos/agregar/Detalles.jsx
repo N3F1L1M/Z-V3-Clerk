@@ -14,25 +14,32 @@ export default function Detalles(props) {
 
 
       // maneja los detalles seleccionados
-  function handleselectedDetalles(selectedOptions) { 
-    const random = selectedOptions?.map((item) => ({...item,value: Math.random(),})) || [];
-     props.setSelectedDetalles(random); }
+    function handleselectedDetalles(selectedOptions) { 
+          const random = selectedOptions?.map((item) => ({...item,value: Math.random(),})) || [];
+          props.setSelectedDetalles(random); 
+        
+        }
 
 
    //agrega el titulo 
-        function tituladora(index, titulo) {
-          const nuevo = props.selectedDetalles.map((detalle, ind) => {
-            if (ind === index) { return { ...detalle, titulo: titulo };
-            } else {return detalle; }   });
-          props.setSelectedDetalles(nuevo); }
+    function tituladora(index, titulo) {
+          props.setSelectedDetalles((prevDetalles) =>
+          prevDetalles.map((detalle, ind) =>
+          ind === index ? { ...detalle, titulo } : detalle));
+
+}
 
 
-        // maneja la edicion de detalles seleccionados
-    function handleModificaDetalles(index, campo, valor) {
-    const nuevos = [...props.selectedDetalles];
-    nuevos[index][campo].value = valor;
-    props.setSelectedDetalles(nuevos);
-  }
+
+   function handleModificaDetalles(index, campo, valor) {
+          props.setSelectedDetalles((prevDetalles) =>
+          prevDetalles.map((detalle, ind) => {
+
+              if (ind === index) { return {...detalle,[campo]: {...detalle[campo],value: valor,},}; }
+              return detalle; })
+          );
+        }
+
 
 
 
