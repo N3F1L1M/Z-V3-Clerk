@@ -38,23 +38,6 @@ export default function FormularioProducto() {
 
   // FUNCIONES MANEJADORAS DE EVENTOS
 
-   // agrega las imagenes a el arreglo de imagenes
-  function handleImageChange (e)  {
-    if (e.target.files) { const filesArray = Array.from(e.target.files); setSelectedImages((prev) => [...prev, ...filesArray])}}
-
-    // elimina una imagen del arreglo de imagenes
-  function handleRemoveImage (indexToRemove) {
-    setSelectedImages((prev) => prev.filter((_, index) => index !== indexToRemove))}
-
-
-
-
-
-
-
-
-
-
 
     // maneja el boton de submit
    async function submit (e)  {
@@ -139,21 +122,18 @@ export default function FormularioProducto() {
 
       <form className="space-y-6 sm:space-y-8 px-4 py-5 sm:px-6 sm:py-6 lg:px-8" onSubmit={submit}>
 
+
             <Basicos     isSubmitting={isSubmitting} />
 
-             
-            <Medios      handleImageChange={handleImageChange} 
-                         handleRemoveImage={handleRemoveImage} 
+            <Medios      isSubmitting={isSubmitting} 
                          selectedImages={selectedImages}
-                         isSubmitting={isSubmitting} />
+                         setSelectedImages={setSelectedImages}/>
 
             <Detalles    plantillas={plantillas}
                          isSubmitting={isSubmitting}
                          selectedDetalles={selectedDetalles}
                          setSelectedDetalles={setSelectedDetalles}/>
                          
-                      
-
             <Descripcion isSubmitting={isSubmitting} />
 
             <Acciones    isSubmitting={isSubmitting} 

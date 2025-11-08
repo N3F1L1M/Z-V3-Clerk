@@ -1,6 +1,33 @@
 import React from 'react'
 
 export default function Medios(props) {
+
+
+
+ // FUNCIONES MANEJADORAS DE EVENTOS
+
+     // agrega las imagenes a el arreglo de imagenes
+  function handleImageChange (e)  {
+
+    if (e.target.files) { const filesArray = Array.from(e.target.files); 
+      props.setSelectedImages((prev) => [...prev, ...filesArray])}
+    
+    }
+
+    // elimina una imagen del arreglo de imagenes
+  function handleRemoveImage (indexToRemove) {
+
+    props.setSelectedImages((prev) => prev.filter((_, index) => index !== indexToRemove))
+  
+  }
+
+
+
+
+
+
+
+
   return (
     
     <section className="border border-gray-300 rounded-lg sm:rounded-xl p-4 sm:p-6">
@@ -47,7 +74,7 @@ export default function Medios(props) {
                   type="file"
                   accept="image/*"
                   multiple
-                  onChange={props.handleImageChange}
+                  onChange={handleImageChange}
                   disabled={props.isSubmitting}
                   className="sr-only disabled:opacity-50 disabled:cursor-not-allowed"
                 />
@@ -75,7 +102,7 @@ export default function Medios(props) {
                         </div>
                         <button
                           type="button"
-                          onClick={() => props.handleRemoveImage(index)}
+                          onClick={() => handleRemoveImage(index)}
                           disabled={props.isSubmitting}
                           className="absolute -right-1 -top-1 sm:right-1 sm:top-1 inline-flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-black/80 text-sm sm:text-base font-semibold text-white shadow-lg transition hover:bg-black hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-white disabled:opacity-50 disabled:cursor-not-allowed"
                           aria-label={`Eliminar imagen ${index + 1}`}
