@@ -49,7 +49,7 @@ export default function Medios(props) {
                   multiple
                   onChange={props.handleImageChange}
                   disabled={props.isSubmitting}
-                  className="sr-only"
+                  className="sr-only disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
 

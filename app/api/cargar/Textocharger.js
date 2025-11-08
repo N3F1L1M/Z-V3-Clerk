@@ -8,13 +8,16 @@ export default async function Textocharger(formdata, idproducto, userId, imgUrls
 
   let document = {
   
-  'titulo': formdata.get("titulo"),
-  'precio': parseFloat(formdata.get("precio")),
-  'detalles': formdata.get("detalles"),
-  'descripcion': formdata.get("descripcion"),
-  'imagenes': imgUrls,
+  'tipo':0,
+  'id': idproducto,
   'id_tienda': userId,
-  'id': idproducto
+  'imagenes': imgUrls,
+  'titulo': formdata.get("titulo"),
+  'descripcion': formdata.get("descripcion"),
+  'precio': parseFloat(formdata.get("precio")),
+  'detalles': JSON.parse(formdata.get("detalles"))
+  
+  
   }
 
   await client.collections("productos").documents().create(document);
