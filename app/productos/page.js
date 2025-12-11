@@ -40,6 +40,15 @@ async function buscadoratypesense(userId) {
 
   async function page() {
 
+
+
+
+
+
+
+
+    
+
     const { userId } = await auth();
 
     let datos = await buscadoratypesense(userId);

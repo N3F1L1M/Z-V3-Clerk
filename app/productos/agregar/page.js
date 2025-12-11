@@ -60,11 +60,12 @@ export default function FormularioProducto() {
         // se limpia los detalles antes de agregarlos al formulario
         const deta = selectedDetalles?.map(item => {
         const limpio = Object.fromEntries(Object.entries(item).map(([key, prop]) => [key,
-        typeof prop.value === "string"?prop.value
+        typeof prop.value === "string" && prop.value !== ""?prop.value
                                       :Array.isArray(prop.value)?prop.value.map(i => i.value).join(", ")
-                                      :prop.value?.value]));
-          return { ...limpio, label: item.label };});
-
+                                      :prop.value?.value]));                       
+          return { ...limpio, label: item.label, titulo: item.titulo };
+        
+        });
         formData.append("detalles", JSON.stringify(deta));
 
 
