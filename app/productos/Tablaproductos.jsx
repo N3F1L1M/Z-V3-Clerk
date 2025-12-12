@@ -19,6 +19,8 @@ import {
 } from 'lucide-react';
 
 const TablaProductos = ({ productos = [] }) => {
+
+  
   // Estados para funcionalidades
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState('id');

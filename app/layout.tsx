@@ -27,15 +27,12 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
   return (
     <ClerkProvider localization={esMX}>
       <html lang="es">
-        <body className="flex flex-wrap border-red-700 border-2">
-
-          <header className="w-screen  border-amber-400 border-2">
+        <body>
             <Navbar />
-          </header>
-
-          <main className="w-screen flex flex-wrap border-amber-700 border-2">
+            
+          <main className="flex">
             <Sidebar />
-            {children}
+            <div className="flex-grow">{children}</div>
           </main>
 
           <Footer/>

@@ -3,7 +3,7 @@
 import Tablaproductos from "./Tablaproductos";
 import BotomAgregarProducto from "./BotomAgregarProducto";
 import { auth } from "@clerk/nextjs/server";
-import { client } from '@/library/Typesense_client';
+import { client } from '@/lib/Typesense_client';
 
 
 
@@ -40,6 +40,15 @@ async function buscadoratypesense(userId) {
 
   async function page() {
 
+
+
+
+
+
+
+
+    
+
     const { userId } = await auth();
 
     let datos = await buscadoratypesense(userId);
@@ -48,7 +57,7 @@ async function buscadoratypesense(userId) {
     //console.log(productos);
 
    return (
-     <div className="flex-grow bg-[#c2c0bc] p-4">
+     <div className="h-full bg-[#c2c0bc] p-4">
 
        <BotomAgregarProducto />
        <Tablaproductos productos={productos} />

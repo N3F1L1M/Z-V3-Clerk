@@ -1,50 +1,25 @@
 
-import { client } from '@/library/Typesense_client';
+import { client } from '@/lib/Typesense_client';
 
 
 
 export default async function Textocharger(formdata, idproducto, userId, imgUrls) {
 
 
-  console.log(formdata.get("precio"));
-
   let document = {
   
-  'titulo': formdata.get("titulo"),
-  'precio': parseFloat(formdata.get("precio")),
-  'detalles': formdata.get("detalles"),
-  'descripcion': formdata.get("descripcion"),
-  'imagenes': imgUrls,
+  'tipo':0,
+  'id': idproducto,
   'id_tienda': userId,
-  'id': idproducto
+  'imagenes': imgUrls,
+  'titulo': formdata.get("titulo"),
+  'descripcion': formdata.get("descripcion"),
+  'precio': parseFloat(formdata.get("precio")),
+  'detalles': JSON.parse(formdata.get("detalles"))
+  
+  
   }
 
-
-
-
-
-try {
-  
-  await client
-    .collections("productos")
-    .documents()
-    .create(document);
-
-  return {
-    success: true,
-    message: "Documento creado con éxito",
-  };
-
-} catch (error) {
-
-  console.log(error);
-   
-  return {
-    success: false,
-    message: "Error al crear documento",
-  };
-}
-
-
+  await client.collections("productos").documents().create(document);
 
 }
