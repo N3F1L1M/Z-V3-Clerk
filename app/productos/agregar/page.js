@@ -40,9 +40,9 @@ export default function FormularioProducto() {
 
 
     // maneja el boton de submit
-   async function submit (e)  {
+   async function submit (e)  { e.preventDefault()
     
-    e.preventDefault()
+    
     
 
     try {
