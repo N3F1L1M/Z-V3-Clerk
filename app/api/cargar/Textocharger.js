@@ -3,7 +3,7 @@ import { client } from '@/lib/Typesense_client';
 
 
 
-export default async function Textocharger(formdata, idproducto, userId, imgUrls) {
+export default async function Textocharger(formdata, idproducto, userId, imagenes) {
 
 
   let document = {
@@ -11,7 +11,7 @@ export default async function Textocharger(formdata, idproducto, userId, imgUrls
   'tipo':0,
   'id': idproducto,
   'id_tienda': userId,
-  'imagenes': imgUrls,
+  'imagenes': imagenes,
   'titulo': formdata.get("titulo"),
   'descripcion': formdata.get("descripcion"),
   'precio': parseFloat(formdata.get("precio")),

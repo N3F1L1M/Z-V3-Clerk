@@ -1,13 +1,13 @@
 
 
 import sharp from "sharp";
-import { PutObjectCommand, S3 } from "@aws-sdk/client-s3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 
 
 
 
-export default async function S3charger(images, idproducto, userId, imgUrls) {
+export default async function S3charger(images, idproducto, userId ) {
 
 
         //SE INICIA EL CLIENTE DE AWS
@@ -22,6 +22,8 @@ export default async function S3charger(images, idproducto, userId, imgUrls) {
         let cont = 0
 
         for (const image of images) {
+
+             
             //Buffers para el manejo de imagenes
             const arrayBuffer = await image.arrayBuffer();
             const inputBuffer = Buffer.from(arrayBuffer);
@@ -52,11 +54,7 @@ export default async function S3charger(images, idproducto, userId, imgUrls) {
             const putCommand = new PutObjectCommand(uploadParams);
             await s3Client.send(putCommand);
 
-            //Se crea la URL Cloudfront de la imagen cargada
-            const cloudfrontUrl = `https://${process.env.AWS_CLOUDFRONT_DOMAIN}/${outputkey}`;
-            imgUrls.push(cloudfrontUrl);
-            cont = cont + 1;   
+            cont = cont + 1;  
         }
-  
-
+            return cont -1;
 }

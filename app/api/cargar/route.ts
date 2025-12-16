@@ -40,18 +40,18 @@ export async function POST(req: NextRequest) {
         //SE EMPIEZA A CARGAR EL PRODUCTO 
 
         const idproducto = nanoid(); //se genera una ID para el producto
-        let imgUrls: string[] = [];//arreglo con los links de las imagenes
+        let imagenes: number = 0;//arreglo con los links de las imagenes
 
 
         //Carga de imagenes en S3
-        try{ await S3charger(images, idproducto, userId, imgUrls); }
+        try{ imagenes = await S3charger(images, idproducto, userId); }
         catch(error){ return NextResponse.json({message: "Error: Fallo de carga de imagenes."}, { status:424 }); }  
 
 
 
 
         //Carga del texto en Typesense
-        try{ await Textocharger(formData, idproducto, userId, imgUrls); }
+        try{ await Textocharger(formData, idproducto, userId, imagenes); }
         catch(error){ return NextResponse.json({message: "Error: Fallo de carga de texto."}, { status:424 }); }    
        
        
