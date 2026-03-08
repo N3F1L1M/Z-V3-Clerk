@@ -1,11 +1,10 @@
-"use client";
 
 import { Search, Heart, ShoppingCart, Menu, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
-import { UserButton,currentUser} from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
 
 
 
