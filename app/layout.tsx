@@ -11,6 +11,7 @@ import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 
 //METADATA
 export const metadata: Metadata = {
@@ -28,7 +29,7 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
     <ClerkProvider localization={esMX}>
       <html lang="es">
         <body>
-            <Navbar />
+            <Header/>
             
           <main className="flex">
             <Sidebar />
