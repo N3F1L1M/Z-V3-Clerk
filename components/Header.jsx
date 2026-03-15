@@ -52,7 +52,7 @@ export default async function Header() {
 
 
 
-                      {/*SECCION DE INPUT*/}
+                      {/*SECCION DE INPUT
           <div className=" row-2 col-span-3 
                            sm:block sm:flex-1 max-w-2xl  lg:mx-8 ">
 
@@ -69,15 +69,8 @@ export default async function Header() {
                 className="absolute right-2 top-1/2 -translate-y-1/2 h-8 px-6 rounded-full bg-gray-900 hover:bg-gray-800 text-white font-semibold shadow-md transition-all hidden sm:block"
               >Buscar</Button>
 
-
-
-
-           
-
-
-
             </form>
-          </div>
+          </div> */}
 
 
 

@@ -69,10 +69,10 @@ export default function Detalles(props) {
 
 
 
-          {/* Mostrar el estado actual de Detalles en formato JSON */}
+          {/* Mostrar el estado actual de Detalles en formato JSON
         <pre className="mt-4 bg-gray-100 p-2 rounded text-sm">
           {JSON.stringify(props.selectedDetalles, null, 2)}
-        </pre> 
+        </pre>   */}
 
 
 
