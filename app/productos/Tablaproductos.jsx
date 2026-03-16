@@ -1,22 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import React, { useState, useMemo } from 'react';
 import { 
-  Search, 
-  Edit, 
-  Trash2, 
-  Eye, 
-  Filter, 
-  ChevronLeft,
-  ChevronRight,
-  Package,
-  Image as ImageIcon,
-  ArrowUpDown,
-  ArrowUp,
-  ArrowDown,
-  BookOpen,
-  Check
-} from 'lucide-react';
+  Search, Edit, Trash2, Eye, Filter, ChevronLeft,ChevronRight,Package,Image as ImageIcon,ArrowUpDown,ArrowUp,
+  ArrowDown,BookOpen,Check} from 'lucide-react';
+
+
 
 const TablaProductos = ({ productos = [] }) => {
 
@@ -173,13 +163,25 @@ const TablaProductos = ({ productos = [] }) => {
   }
 
   return (
-    <div className="p-6">
+
+    <div className="p-6 bg-white rounded-lg shadow mt-5">
       {/* Header con búsqueda y filtros */}
       <div className="mb-6 space-y-4">
+
+
+
         <div className="flex flex-col sm:flex-row gap-4">
+
+    <Link href="/productos/agregar" 
+    className="bg-emerald-700 text-white px-4 py-2  rounded hover:bg-emerald-500 " 
+    >Agregar nuevo productos</Link>
+
+
+
           {/* Búsqueda */}
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+
             <input
               type="text"
               placeholder="Buscar productos por nombre o ID..."
@@ -187,6 +189,7 @@ const TablaProductos = ({ productos = [] }) => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             />
+
           </div>
 
           {/* Botones de acción */}

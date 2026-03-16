@@ -1,7 +1,6 @@
 
 
 import Tablaproductos from "./Tablaproductos";
-import BotomAgregarProducto from "./BotomAgregarProducto";
 import { auth } from "@clerk/nextjs/server";
 import { client } from '@/lib/Typesense_client';
 
@@ -59,7 +58,6 @@ async function buscadoratypesense(userId) {
    return (
      <div className="h-full bg-[#c2c0bc] p-4">
 
-       <BotomAgregarProducto />
        <Tablaproductos productos={productos} />
      </div>
    );
