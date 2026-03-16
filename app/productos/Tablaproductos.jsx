@@ -174,7 +174,7 @@ const TablaProductos = ({ productos = [] }) => {
 
     <Link href="/productos/agregar" 
     className="bg-emerald-700 text-white px-4 py-2  rounded hover:bg-emerald-500 " 
-    >Agregar nuevo productos</Link>
+    >Agregar nuevo producto</Link>
 
 
 
