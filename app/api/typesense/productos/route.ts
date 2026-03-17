@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
               .collections('productos')
               .documents()
               .search(searchParameters);
-              return NextResponse.json({ results }); // Devuelve los resultados de la búsqueda en formato JSON
+              return NextResponse.json(results); // Devuelve los resultados de la búsqueda en formato JSON
         
           
         //FUNCION BUSCADORA TYPESENSE

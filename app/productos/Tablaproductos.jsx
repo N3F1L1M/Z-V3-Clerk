@@ -1,17 +1,28 @@
 "use client";
 
+import axios from "axios"
 import Link from "next/link";
-import React, { useState, useMemo } from 'react';
-import { 
-  Search, Edit, Trash2, Eye, Filter, ChevronLeft,ChevronRight,Package,Image as ImageIcon,ArrowUpDown,ArrowUp,
-  ArrowDown,BookOpen,Check} from 'lucide-react';
+
+import React, { useState, useEffect, useMemo } from 'react';
+import { Search, Edit, Trash2, Eye, Filter, 
+         ChevronLeft,ChevronRight,Package,
+        Image as ImageIcon,ArrowUpDown,ArrowUp,
+        ArrowDown,BookOpen,Check} from 'lucide-react';
 
 
 
-const TablaProductos = ({ productos = [] }) => {
 
+
+
+
+  //FUNCION PRINCIPAL   
+ export default function TablaProductos () {
+
+
+  //ESTADOS
+  const [query, setQuery] = useState("");
+  const [productos, setProductos] = useState([]);
   
-  // Estados para funcionalidades
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState('id');
   const [sortDirection, setSortDirection] = useState('asc');
@@ -21,6 +32,34 @@ const TablaProductos = ({ productos = [] }) => {
   const [showFilters, setShowFilters] = useState(false);
   const [priceFilter, setPriceFilter] = useState({ min: '', max: '' });
   const [copiedId, setCopiedId] = useState(null);
+
+
+
+  // funcion que llama a el endpoint (API PERSONAL)de busqueda de productos en typesense
+   async function fetchProductos(q) {
+    try {
+      const {data} = await axios.get("/api/typesense/productos", {params: { q },});
+      //console.log(data?.hits.map(hit => hit.document));
+      setProductos(data?.hits.map(hit => hit.document));
+      
+    } 
+    
+    catch (error) {console.error(error);}
+   }
+
+
+   // se llama a la función de busqueda al cargar el componente
+  //useEffect(() => {fetchProductos("*");}, []);
+
+
+   //funcion que espera a que el usuario deje de escribir para hacer la busqueda y evitar hacer una petición por cada letra que escribe
+  useEffect(() => { 
+  const timeout = setTimeout(() => { const q = query.trim() === "" ? "*" : query; fetchProductos(q);}, 300);
+  return () => clearTimeout(timeout);}, [query]);
+
+
+  
+
 
   // Función para formatear precio
   const formatPrice = (price) => {
@@ -162,6 +201,11 @@ const TablaProductos = ({ productos = [] }) => {
     );
   }
 
+
+
+
+
+
   return (
 
     <div className="p-6 bg-white rounded-lg shadow mt-5">
@@ -185,8 +229,8 @@ const TablaProductos = ({ productos = [] }) => {
             <input
               type="text"
               placeholder="Buscar productos por nombre o ID..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             />
 
@@ -491,6 +535,9 @@ const TablaProductos = ({ productos = [] }) => {
       </div>
     </div>
   );
+
+
+
+
 };
 
-export default TablaProductos;

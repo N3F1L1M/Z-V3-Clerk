@@ -8,7 +8,7 @@ import { client } from '@/lib/Typesense_client';
 
 
 
-
+{/*
 //FUNCION BUSCADORA TYPESENSE
 async function buscadoratypesense(userId) {
 
@@ -28,7 +28,7 @@ async function buscadoratypesense(userId) {
 
   } catch (error) { return ('Error al buscar:', error);}}
 //FUNCION BUSCADORA TYPESENSE
-  
+  */}
 
 
 
@@ -43,19 +43,19 @@ async function buscadoratypesense(userId) {
 
 
     const { userId } = await auth();
-    let datos = await buscadoratypesense(userId);
-    let productos = datos.hits.map(hit => hit.document);
+    //let datos = await buscadoratypesense(userId);
+    //let productos = datos.hits.map(hit => hit.document);
     //console.log(productos);
 
 
 
-
-
+    
 
    return (
      <div className="h-full bg-[#c2c0bc] p-4">
 
-       <Tablaproductos productos={productos} />
+      <Tablaproductos/>
+
      </div>
    );
  }
