@@ -19,11 +19,12 @@ import { Search, Edit, Trash2, Eye, Filter,
  export default function TablaProductos () {
 
 
+
   //ESTADOS
   const [query, setQuery] = useState("");
   const [productos, setProductos] = useState([]);
   
-  const [searchTerm, setSearchTerm] = useState('');
+  
   const [sortField, setSortField] = useState('id');
   const [sortDirection, setSortDirection] = useState('asc');
   const [currentPage, setCurrentPage] = useState(1);
@@ -40,19 +41,14 @@ import { Search, Edit, Trash2, Eye, Filter,
     try {
       const {data} = await axios.get("/api/typesense/productos", {params: { q },});
       //console.log(data?.hits.map(hit => hit.document));
-      setProductos(data?.hits.map(hit => hit.document));
-      
-    } 
+      setProductos(data?.hits.map(hit => hit.document));} 
     
     catch (error) {console.error(error);}
    }
 
 
-   // se llama a la función de busqueda al cargar el componente
-  //useEffect(() => {fetchProductos("*");}, []);
-
-
    //funcion que espera a que el usuario deje de escribir para hacer la busqueda y evitar hacer una petición por cada letra que escribe
+   
   useEffect(() => { 
   const timeout = setTimeout(() => { const q = query.trim() === "" ? "*" : query; fetchProductos(q);}, 300);
   return () => clearTimeout(timeout);}, [query]);
@@ -61,23 +57,8 @@ import { Search, Edit, Trash2, Eye, Filter,
   
 
 
-  // Función para formatear precio
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat('es-MX', {
-      style: 'currency',
-      currency: 'MXN'
-    }).format(price);
-  };
 
-  // Función para obtener estado del producto
-  const getProductStatus = (producto) => {
-    const stock = producto.stock || Math.floor(Math.random() * 100);
-    if (stock === 0) return { status: 'sin-stock', label: 'Sin stock', color: 'text-red-600 bg-red-50 border-red-200' };
-    if (stock < 10) return { status: 'bajo-stock', label: 'Bajo stock', color: 'text-yellow-600 bg-yellow-50 border-yellow-200' };
-    return { status: 'en-stock', label: 'En stock', color: 'text-green-600 bg-green-50 border-green-200' };
-  };
-
-  // Función para manejar ordenamiento
+    // Función para manejar ordenamiento
   const handleSort = (field) => {
     if (sortField === field) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
@@ -87,51 +68,28 @@ import { Search, Edit, Trash2, Eye, Filter,
     }
   };
 
-  // Productos filtrados y ordenados
-  const filteredAndSortedProducts = useMemo(() => {
-    let filtered = productos.filter(producto => {
-      const matchesSearch = producto.titulo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           producto.id?.toString().includes(searchTerm);
-      
-      const matchesPrice = (!priceFilter.min || parseFloat(producto.precio) >= parseFloat(priceFilter.min)) &&
-                          (!priceFilter.max || parseFloat(producto.precio) <= parseFloat(priceFilter.max));
-      
-      return matchesSearch && matchesPrice;
-    });
 
-    // Ordenar
-    filtered.sort((a, b) => {
-      let aValue = a[sortField];
-      let bValue = b[sortField];
 
-      if (sortField === 'precio') {
-        aValue = parseFloat(aValue) || 0;
-        bValue = parseFloat(bValue) || 0;
-      }
+  // Función para formatear precio
+  function formatPrice(price) {
+    return new Intl.NumberFormat('es-MX', {style: 'currency',currency: 'MXN'}).format(price);}
 
-      if (typeof aValue === 'string') {
-        aValue = aValue.toLowerCase();
-        bValue = bValue.toLowerCase();
-      }
-
-      if (sortDirection === 'asc') {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
-      }
-    });
-
-    return filtered;
-  }, [productos, searchTerm, sortField, sortDirection, priceFilter]);
+  // Función para obtener estado del producto
+  const getProductStatus = (producto) => {
+    const stock = producto.stock || Math.floor(Math.random() * 100);
+    if (stock === 0) return { status: 'sin-stock', label: 'Sin stock', color: 'text-red-600 bg-red-50 border-red-200' };
+    if (stock < 10) return { status: 'bajo-stock', label: 'Bajo stock', color: 'text-yellow-600 bg-yellow-50 border-yellow-200' };
+    return { status: 'en-stock', label: 'En stock', color: 'text-green-600 bg-green-50 border-green-200' };
+  };
 
   // Paginación
-  const totalPages = Math.ceil(filteredAndSortedProducts.length / itemsPerPage);
-  const paginatedProducts = filteredAndSortedProducts.slice(
+  const totalPages = Math.ceil(productos.length / itemsPerPage);
+  const paginatedProducts = productos.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
-  // Funciones de acciones
+  // FUNCIONES DE ACCIONES
   const handleEdit = (productId) => {
     console.log('Editar producto:', productId);
     // Aquí implementarías la lógica de edición
@@ -175,7 +133,7 @@ import { Search, Edit, Trash2, Eye, Filter,
         : [...prev, productId]
     );
   };
-
+  // Función para seleccionar/deseleccionar todos los productos en la página actual
   const toggleSelectAll = () => {
     if (selectedProducts.length === paginatedProducts.length) {
       setSelectedProducts([]);
@@ -192,14 +150,14 @@ import { Search, Edit, Trash2, Eye, Filter,
       : <ArrowDown className="w-4 h-4 text-blue-600" />;
   };
 
-  if (productos.length === 0) {
-    return (
-      <div className="p-8 text-center">
-        <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-600">No hay productos para mostrar</p>
-      </div>
-    );
-  }
+
+
+
+
+
+
+
+
 
 
 
@@ -209,20 +167,23 @@ import { Search, Edit, Trash2, Eye, Filter,
   return (
 
     <div className="p-6 bg-white rounded-lg shadow mt-5">
+
+
+
       {/* Header con búsqueda y filtros */}
-      <div className="mb-6 space-y-4">
+      <div className="mb-6 space-y-4 ">
+
+
+      <div className="flex flex-col sm:flex-row gap-4">
+
+          {/* Boton de agregar producto */}
+          <Link href="/productos/agregar" 
+          className="bg-emerald-700 text-white px-4 py-2  rounded hover:bg-emerald-500 " 
+          >Agregar nuevo producto</Link>
 
 
 
-        <div className="flex flex-col sm:flex-row gap-4">
-
-    <Link href="/productos/agregar" 
-    className="bg-emerald-700 text-white px-4 py-2  rounded hover:bg-emerald-500 " 
-    >Agregar nuevo producto</Link>
-
-
-
-          {/* Búsqueda */}
+          {/* Barra de busqueda */}
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
 
@@ -236,12 +197,12 @@ import { Search, Edit, Trash2, Eye, Filter,
 
           </div>
 
+
           {/* Botones de acción */}
           <div className="flex gap-2">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-            >
+              className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
               <Filter className="w-4 h-4" />
               Filtros
             </button>
@@ -301,11 +262,37 @@ import { Search, Edit, Trash2, Eye, Filter,
             </div>
           </div>
         )}
-      </div>
+        
+      </div>{/* FIN Header con búsqueda y filtros */}
+        
+
+
+
+
+
+
+
 
       {/* Tabla */}
       <div className="overflow-x-auto rounded-lg border border-gray-200">
-        <table className="w-full bg-white">
+        
+          
+
+
+         {productos.length === 0 ? (
+    
+                <div className="p-8 text-center">
+                  <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600">No hay productos para mostrar</p>
+                </div>
+
+
+
+              ) : (
+
+                <table className="w-full bg-white">
+
+
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               <th className="px-4 py-3 text-left">
@@ -350,12 +337,16 @@ import { Search, Edit, Trash2, Eye, Filter,
               </th>
             </tr>
           </thead>
-          
-          <tbody className="divide-y divide-gray-200">
-            {paginatedProducts.map((producto) => {
+
+
+
+
+       <tbody className="divide-y divide-gray-200">
+            {productos.map((producto) => {
               const status = getProductStatus(producto);
               
               return (
+                
                 <tr key={producto.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-4 py-4">
                     <input
@@ -451,8 +442,21 @@ import { Search, Edit, Trash2, Eye, Filter,
               );
             })}
           </tbody>
-        </table>
+
+
+
+
+          </table>
+    )}
+
       </div>
+              {/* FIN de la tabla Tabla */}
+
+
+
+
+
+
 
       {/* Paginación */}
       {totalPages > 1 && (
@@ -530,8 +534,8 @@ import { Search, Edit, Trash2, Eye, Filter,
 
       {/* Info de resultados */}
       <div className="mt-4 text-center text-sm text-gray-500">
-        Mostrando {paginatedProducts.length} de {filteredAndSortedProducts.length} productos
-        {filteredAndSortedProducts.length !== productos.length && ` (filtrado de ${productos.length} total)`}
+        Mostrando {paginatedProducts.length} de {productos.length} productos
+        {productos.length !== productos.length && ` (filtrado de ${productos.length} total)`}
       </div>
     </div>
   );
