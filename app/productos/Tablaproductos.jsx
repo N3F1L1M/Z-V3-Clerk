@@ -3,7 +3,7 @@
 import axios from "axios"
 import Link from "next/link";
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useRef  } from 'react';
 import { Search, Edit, Trash2, Eye, Filter, 
          ChevronLeft,ChevronRight,Package,
         Image as ImageIcon,ArrowUpDown,ArrowUp,
@@ -18,12 +18,11 @@ import { Search, Edit, Trash2, Eye, Filter,
   //FUNCION PRINCIPAL   
  export default function TablaProductos () {
 
-
+  const firstLoad = useRef(true);
 
   //ESTADOS
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("*");
   const [productos, setProductos] = useState([]);
-  
   
   const [sortField, setSortField] = useState('id');
   const [sortDirection, setSortDirection] = useState('asc');
@@ -37,23 +36,23 @@ import { Search, Edit, Trash2, Eye, Filter,
 
 
   // funcion que llama a el endpoint (API PERSONAL)de busqueda de productos en typesense
-   async function fetchProductos(q) {
+
+   async function fetchProductos() {
     try {
-      const {data} = await axios.get("/api/typesense/productos", {params: { q },});
-      //console.log(data?.hits.map(hit => hit.document));
+      const {data} = await axios.get("/api/typesense/productos", {params: {q:query},});
+      console.log(data?.hits.map(hit => hit.document));
       setProductos(data?.hits.map(hit => hit.document));} 
     
     catch (error) {console.error(error);}
    }
 
 
-   //funcion que espera a que el usuario deje de escribir para hacer la busqueda y evitar hacer una petición por cada letra que escribe
-   
-  useEffect(() => { 
-  const timeout = setTimeout(() => { const q = query.trim() === "" ? "*" : query; fetchProductos(q);}, 300);
-  return () => clearTimeout(timeout);}, [query]);
+   // funcion debounce para evitar  demasiadas llamadas a la API 
+    useEffect(() => {
+      if (firstLoad.current) {fetchProductos();firstLoad.current = false;return;}
 
-
+      const timeout = setTimeout(() => {fetchProductos(); }, 300);
+      return () => clearTimeout(timeout); }, [query]);
   
 
 
@@ -74,6 +73,7 @@ import { Search, Edit, Trash2, Eye, Filter,
   function formatPrice(price) {
     return new Intl.NumberFormat('es-MX', {style: 'currency',currency: 'MXN'}).format(price);}
 
+    
   // Función para obtener estado del producto
   const getProductStatus = (producto) => {
     const stock = producto.stock || Math.floor(Math.random() * 100);
@@ -142,6 +142,11 @@ import { Search, Edit, Trash2, Eye, Filter,
     }
   };
 
+
+
+
+
+
   // Componente de icono de ordenamiento
   const SortIcon = ({ field }) => {
     if (sortField !== field) return <ArrowUpDown className="w-4 h-4 text-gray-400" />;
@@ -149,16 +154,6 @@ import { Search, Edit, Trash2, Eye, Filter,
       ? <ArrowUp className="w-4 h-4 text-blue-600" />
       : <ArrowDown className="w-4 h-4 text-blue-600" />;
   };
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -366,23 +361,22 @@ import { Search, Edit, Trash2, Eye, Filter,
                     </div>
                   </td>
                   
+
                   <td className="px-4 py-4">
-                    {producto.imagenes && producto.imagenes[0] ? (
+                    {producto.imagenes ? (
+
                       <img 
-                        src={producto.imagenes[0]} 
                         alt={producto.titulo}
-                        className="w-12 h-12 rounded-lg object-cover border border-gray-200"
-                        onError={(e) => {
-                          e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA0OCA0OCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNCAzOFY4YzAtMS4xLjktMiAyLTJoMzZjMS4xIDAgMiAuOSAyIDJ2MzBjMCAxLjEtLjkgMi0yIDJINmMtMS4xIDAtMi0uOS0yLTJ6IiBzdHJva2U9IiNEMUQ1REIiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0xNCAxOGE0IDQgMCAxIDAgOCAwIDQgNCAwIDAgMC04IDB6TTE0IDMybDE0LTE0IDEwIDEwIiBzdHJva2U9IiNEMUQ1REIiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+';
-                        }}
-                      />
+                        src={`https://d67xyqggt6v2u.cloudfront.net/${producto.id_tienda}/productos/${producto.id}/img-0.webp`}
+                        className="w-12 h-12 rounded-lg object-cover border border-gray-200"/>
+
                     ) : (
+
                       <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
-                        <ImageIcon className="w-6 h-6 text-gray-400" />
-                      </div>
-                    )}
+                        <ImageIcon className="w-6 h-6 text-gray-400" /> </div> )}
                   </td>
                   
+
                   <td className="px-4 py-4">
                     <span className="text-sm font-semibold text-gray-900">
                       {formatPrice(producto.precio)}
