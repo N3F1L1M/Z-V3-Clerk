@@ -19,7 +19,8 @@ export async function GET(req: NextRequest) {
 
         const query = req.nextUrl.searchParams.get("q");
         const page = req.nextUrl.searchParams.get("page");
-
+        const sort = req.nextUrl.searchParams.get("s");
+        console.log(sort);
 
         //FUNCION BUSCADORA TYPESENSE
         const searchParameters = {
@@ -27,7 +28,7 @@ export async function GET(req: NextRequest) {
               query_by: "titulo",
               filter_by: `id_tienda:=${userId}`,
               page: Number(page) || 1,
-              sort_by: "_text_match:desc"};
+              sort_by: sort || "_text_match:desc"};
 
 
          const results = await client

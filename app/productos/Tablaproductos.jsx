@@ -24,8 +24,8 @@ import { Search, Edit, Trash2, Eye, Filter,
   const [query, setQuery] = useState("*");
   const [productos, setProductos] = useState([]);
   
-  const [sortField, setSortField] = useState('id');
-  const [sortDirection, setSortDirection] = useState('asc');
+  const [sortField, setSortField] = useState("");
+  const [sortDirection, setSortDirection] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedProducts, setSelectedProducts] = useState([]);
@@ -39,7 +39,11 @@ import { Search, Edit, Trash2, Eye, Filter,
 
    async function fetchProductos() {
     try {
-      const {data} = await axios.get("/api/typesense/productos", {params: {q:query},});
+      const {data} = await axios.get("/api/typesense/productos",
+         {params: {q:query,
+                   s:sortField && sortDirection ?
+                    `${sortField}:${sortDirection}` : null},}  )
+
       console.log(data?.hits.map(hit => hit.document));
       setProductos(data?.hits.map(hit => hit.document));} 
     
@@ -52,22 +56,16 @@ import { Search, Edit, Trash2, Eye, Filter,
       if (firstLoad.current) {fetchProductos();firstLoad.current = false;return;}
 
       const timeout = setTimeout(() => {fetchProductos(); }, 300);
-      return () => clearTimeout(timeout); }, [query]);
+      return () => clearTimeout(timeout); }, [query, sortField, sortDirection]);
   
 
 
-
-    // Función para manejar ordenamiento
-  const handleSort = (field) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortField(field);
-      setSortDirection('asc');
-    }
-  };
-
-
+      // Función para manejar ordenamiento
+    function handleSort(field) {
+          if (sortField !== field) {setSortField(field);setSortDirection("asc");return;}
+          if (sortDirection === "asc") {setSortDirection("desc");}
+          else if (sortDirection === "desc") {setSortField(null);setSortDirection(null);}
+        }
 
   // Función para formatear precio
   function formatPrice(price) {
@@ -363,7 +361,7 @@ import { Search, Edit, Trash2, Eye, Filter,
                   
 
                   <td className="px-4 py-4">
-                    {producto.imagenes ? (
+                    {producto.imagenes>=0 ? (
 
                       <img 
                         alt={producto.titulo}
