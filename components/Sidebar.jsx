@@ -12,7 +12,7 @@ export default function Sidebar() {
       className={`
         ${isOpen ? "w-64" : "w-16"}
         h-dvh sticky top-0
-        bg-gradient-to-r from-[#172785] to-[#f02323] text-white
+        bg-gradient-to-r from-[#000000] to-[#214519] text-white
         transition-all duration-300
         shadow-lg flex flex-col
       `}

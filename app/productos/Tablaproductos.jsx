@@ -21,7 +21,7 @@ import { Search, Edit, Trash2, Eye, Filter,
   const firstLoad = useRef(true);
 
   //ESTADOS
-  const [query, setQuery] = useState("*");
+  const [query, setQuery] = useState("");
   const [productos, setProductos] = useState([]);
   
   const [sortField, setSortField] = useState("");
@@ -93,9 +93,23 @@ import { Search, Edit, Trash2, Eye, Filter,
     // Aquí implementarías la lógica de edición
   };
 
-  const handleDelete = (productId) => {
-    console.log('Eliminar producto:', productId);
-    // Aquí implementarías la lógica de eliminación
+  async function handleDelete(productId)  {
+
+    const confirmDelete = window.confirm(
+    "¿Estás seguro de que quieres eliminar este producto? Esta acción no se puede deshacer."
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+    await axios.delete("/api/typesense/productos", {
+      params: { id: productId }
+    });
+    setProductos(prev => prev.filter(p => p.id !== productId));
+
+  } catch (error) {
+    console.error(error);
+  }
   };
 
   const handleView = (productId) => {
