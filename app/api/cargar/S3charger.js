@@ -56,5 +56,5 @@ export default async function S3charger(images, idproducto, userId ) {
 
             cont = cont + 1;  
         }
-            return cont -1;
+            return cont;
 }
