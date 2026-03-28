@@ -4,46 +4,48 @@ import { client } from "@/lib/Typesense_client";
 
 import S3borrador from "../solo/S3borrador";
 
+
+
+
+
+
 //FUNCION GET
 export async function GET(req: NextRequest) {
-  //se carga los datos de sesion
-  const { userId } = await auth();
+ 
+  const { userId } = await auth();  //se carga los datos de sesion
 
   try {
+
     //se revisa que el usuario este loggeado
-    if (!userId) {
-      return NextResponse.json(
-        { message: "Error: No autorizado. Debes iniciar sesión." },
-        { status: 401 },
-      );
-    }
+    if (!userId) {return NextResponse.json({ message: "Error: No autorizado. Debes iniciar sesión." },{status:401});}
 
-    const query = req.nextUrl.searchParams.get("q");
-    const page = req.nextUrl.searchParams.get("page");
-    const sort = req.nextUrl.searchParams.get("s");
-    console.log(sort);
 
-    //FUNCION BUSCADORA TYPESENSE
-    const searchParameters = {
-      q: query || "*",
-      query_by: "titulo",
-      filter_by: `id_tienda:=${userId}`,
-      page: Number(page) || 1,
-      sort_by: sort || "_text_match:desc",
-    };
+    
+    const id = req.nextUrl.searchParams.get("id");
+    if (!id) {return NextResponse.json({ message: "ID es requerido" },{ status: 400 });}
 
+
+    //FUNCIÓN DE BUSQUEDA EN TYPESENSE
     const results = await client
       .collections("productos")
-      .documents()
-      .search(searchParameters);
-    return NextResponse.json(results); // Devuelve los resultados de la búsqueda en formato JSON
+      .documents(id)
+      .retrieve();
+
+    return NextResponse.json(results);
+
   } catch (error) {
     return NextResponse.json(
-      { message: "Error: en la busqueda." },
-      { status: 500 },
+      { message: "Error en la búsqueda." },
+      { status: 500 }
     );
   }
 }
+
+
+
+
+
+
 
 //FUNCION DELETE
 export async function DELETE(req: NextRequest) {
