@@ -6,15 +6,11 @@ import axios from "axios"
 import {useState} from "react"
 import plantillasOriginal from "@/lib/plantillas_detalles"
 
-import Medios from "./Medios"
-import Basicos from "./Basicos"
-import Detalles from "./Detalles"
-import Acciones from "./Acciones"
-import Descripcion from "./Descripcion"
-
-
-
-
+import Medios from "@/components/productosCargarEditar/Medios"
+import Basicos from "@/components/productosCargarEditar/Basicos"
+import Detalles from "@/components/productosCargarEditar/Detalles"
+import Acciones from "@/components/productosCargarEditar/Acciones"
+import Descripcion from "@/components/productosCargarEditar/Descripcion"
 
 
 
@@ -71,7 +67,7 @@ export default function FormularioProducto() {
 
         // se envia los datos que se agregaron al formulario a la ruta de api/s3
         // Para que la peticion acepte imagenes y no texto, especificamos que el contentType sea multipart/form-data
-        const {data} = await axios.post("/api/cargar", formData, {headers: { "Content-Type": "multipart/form-data" },});
+        const {data} = await axios.post("/api/productos/cargar", formData, {headers: { "Content-Type": "multipart/form-data" },});
 
 
         // Condicional para validar que la peticion fue exitosa
