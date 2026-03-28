@@ -39,7 +39,7 @@ import { Search, Edit, Trash2, Eye, Filter,
 
    async function fetchProductos() {
     try {
-      const {data} = await axios.get("/api/typesense/productos",
+      const {data} = await axios.get("/api/fetch/multi",
          {params: {q:query,
                    s:sortField && sortDirection ?
                     `${sortField}:${sortDirection}` : null},}  )
@@ -102,7 +102,7 @@ import { Search, Edit, Trash2, Eye, Filter,
   if (!confirmDelete) return;
 
   try {
-    await axios.delete("/api/typesense/productos", {
+    await axios.delete("/api/fetch/solo", {
       params: { id: productId }
     });
     setProductos(prev => prev.filter(p => p.id !== productId));
@@ -427,13 +427,13 @@ import { Search, Edit, Trash2, Eye, Filter,
                         <Eye className="w-4 h-4" />
                       </button>
                       
-                      <button
-                        onClick={() => handleEdit(producto.id)}
+                      <Link
+                        href={`/productos/editar/${producto.id}`}
                         className="p-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
                         title="Editar"
                       >
                         <Edit className="w-4 h-4" />
-                      </button>
+                      </Link>
                       
                       <button
                         onClick={() => handleDelete(producto.id)}

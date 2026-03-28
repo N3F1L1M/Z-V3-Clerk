@@ -15,10 +15,10 @@ import Descripcion from "@/components/productosCargarEditar/Descripcion"
 
 
 //main function
-export default function AgregarProducto() {     
+export default function EditarProducto({params}) {     
 
 
-
+  id = params.id;
 
   // ESTADOS
   const plantillas = structuredClone(plantillasOriginal);
