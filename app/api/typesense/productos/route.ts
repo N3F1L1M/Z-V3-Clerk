@@ -58,33 +58,33 @@ export async function GET(req: NextRequest) {
 
 
 
-        //METODO DELETE
+        //FUNCION DELETE
         export async function DELETE(req: NextRequest) {
 
           //se carga los datos de sesion 
           const { userId } = await auth();
+          const id = req.nextUrl.searchParams.get("id");
 
-    try {
-        //se revisa que el usuario este loggeado
-        if (!userId) {return NextResponse.json({message: "Error: No autorizado. Debes iniciar sesión."}, { status: 401 });}
+    try {if (!userId) {return NextResponse.json({message: "Error: No autorizado. Debes iniciar sesión."}, { status: 401 });}
+         if (!id) {return NextResponse.json({ message: "ID es requerido" },{ status: 400 });}
 
 
-        const id = req.nextUrl.searchParams.get("id");
-        
-        console.log(id);
-    
-        
-          
+
+             await client
+            .collections('productos')
+            .documents(id)
+            .delete();
+
            //borrar imagenes del producto en S3
-         try{ await S3borrador(id, userId); }
-       catch(error){ return NextResponse.json({message: "Error: Fallo al borrar imágenes."}, { status:424 }); } 
+             await S3borrador(id, userId); 
+       
 
 
         return NextResponse.json({message: "Producto eliminado correctamente."}, { status:200 }); // Devuelve un mensaje de éxito en formato JSON
         
-    } 
-    catch (error) { 
-        return NextResponse.json({message: "Error: en la eliminación."}, { status:500 }); }
+    }  
+        catch (error) { console.error("DELETE error:", error);
+        return NextResponse.json({ message: "Error interno al eliminar." },{ status: 500 });}
 
 
 }    
