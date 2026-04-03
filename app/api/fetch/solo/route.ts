@@ -31,9 +31,10 @@ export async function GET(req: NextRequest) {
       .documents(id)
       .retrieve();
 
+    
     return NextResponse.json(results);
 
-  } catch (error) {
+  } catch (error) { console.error(error);
     return NextResponse.json(
       { message: "Error en la búsqueda." },
       { status: 500 }

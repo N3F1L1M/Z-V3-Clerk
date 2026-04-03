@@ -3,14 +3,14 @@
 
 // importaciones
 import axios from "axios"
-import {useState} from "react"
+import {useState,useEffect, use} from "react"
 import plantillasOriginal from "@/lib/plantillas_detalles"
 
-import Medios from "@/components/productosCargarEditar/Medios"
-import Basicos from "@/components/productosCargarEditar/Basicos"
-import Detalles from "@/components/productosCargarEditar/Detalles"
-import Acciones from "@/components/productosCargarEditar/Acciones"
-import Descripcion from "@/components/productosCargarEditar/Descripcion"
+import Medios from "./Medios"
+import Basicos from "./Basicos"
+import Detalles from "./Detalles"
+import Acciones from "./Acciones"
+import Descripcion from "./Descripcion"
 
 
 
@@ -18,16 +18,29 @@ import Descripcion from "@/components/productosCargarEditar/Descripcion"
 export default function EditarProducto({params}) {     
 
 
-  id = params.id;
+   const { id } = use(params);
+   
 
   // ESTADOS
   const plantillas = structuredClone(plantillasOriginal);
   const [selectedImages, setSelectedImages] = useState([]); // imagenes que se agregan al formulario
-  const [charge, setCharge] = useState(""); // mensajes del proceso de envio al S3 e.j: "Procesando..."
+  const [charge, setCharge] = useState(); // mensajes del proceso de envio al S3 e.j: "Procesando..."
   const [selectedDetalles, setSelectedDetalles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+  const [producto, setProducto] = useState();
 
+
+
+  // FUNCION DE CARGA DE DATOS
+      async function fetchProductos() {
+    try { const { data } = await axios.get("/api/fetch/solo", {params: { id }}); 
+    setProducto(data);} 
+    catch (error) {console.error(error);}}
+   
+   useEffect(() => {fetchProductos();}, [id]); // para que solo se cargue cuando se monte el componente 
+      
+
+          console.log(producto)
 
 
 
@@ -35,15 +48,25 @@ export default function EditarProducto({params}) {
   // FUNCIONES MANEJADORAS DE EVENTOS
 
 
+
+     // edita el producto 
+      function handleChange(e) {
+
+        const { name, value } = e.target;
+
+        setProducto(prev => {  
+          
+          const copia = structuredClone(prev);
+          copia[name] = value; 
+          return copia;});
+      }
+
+
+
     // maneja el boton de submit
    async function submit (e)  { e.preventDefault()
     
-    
-    
-
     try {
-        
-        
         setIsSubmitting(true);
         const formData = new FormData();
 
@@ -90,7 +113,13 @@ export default function EditarProducto({params}) {
   }
 
 
- 
+  if (!producto) {
+  return (
+    <div className="flex justify-center py-20">
+      Cargando producto...
+    </div>);
+    
+  }
 
   
   return (
@@ -113,7 +142,9 @@ export default function EditarProducto({params}) {
       <form className="space-y-6 sm:space-y-8 px-4 py-5 sm:px-6 sm:py-6 lg:px-8" onSubmit={submit}>
 
 
-            <Basicos     isSubmitting={isSubmitting} />
+            <Basicos     isSubmitting={isSubmitting} 
+                         producto={producto}
+                         handleChange={handleChange}/>
 
             <Medios      isSubmitting={isSubmitting} 
                          selectedImages={selectedImages}
@@ -124,7 +155,9 @@ export default function EditarProducto({params}) {
                          selectedDetalles={selectedDetalles}
                          setSelectedDetalles={setSelectedDetalles}/>
                          
-            <Descripcion isSubmitting={isSubmitting} />
+            <Descripcion isSubmitting={isSubmitting}
+                         producto={producto}
+                         handleChange={handleChange}/>
 
             <Acciones    isSubmitting={isSubmitting} 
                          setIsSubmitting={setIsSubmitting} />

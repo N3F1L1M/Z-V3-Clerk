@@ -6,11 +6,11 @@ import axios from "axios"
 import {useState} from "react"
 import plantillasOriginal from "@/lib/plantillas_detalles"
 
-import Medios from "@/components/productosCargarEditar/Medios"
-import Basicos from "@/components/productosCargarEditar/Basicos"
-import Detalles from "@/components/productosCargarEditar/Detalles"
-import Acciones from "@/components/productosCargarEditar/Acciones"
-import Descripcion from "@/components/productosCargarEditar/Descripcion"
+import Medios from "./Medios"
+import Basicos from "./Basicos"
+import Detalles from "./Detalles"
+import Acciones from "./Acciones"
+import Descripcion from "./Descripcion"
 
 
 
